@@ -1,0 +1,29 @@
+baseURL = "http://people.ds.cam.ac.uk/psh35/blog/"
+languageCode = "en-GB"
+title = "Curious DBA"
+
+[taxonomies]
+tag = "tags"
+
+[params]
+  author = "Paul Houghton"
+  description = "Improving all the time"
+  metadescription = "Used as 'description' meta tag for both home and index pages. If not set, 'description' will be used instead"
+  cover = "images/coversky.jpg"
+  authorlocation = "Cambridge, United Kingdom"
+  authorwebsite = "http://people.ds.cam.ac.uk/psh35/blog/"
+  bio= "Senior DBA"
+  logo = "images/Paul.jpg"
+  # Optional RSS-Link, if not provided it defaults to the standard index.xml
+  githubName = "pau1ie"
+  #twitterName = "vjeantet"
+  # facebookName = ""
+  # linkedinName = ""
+  # set true if you are not proud of using Hugo (true will hide the footer note "Proudly published with HUGO.....")
+  hideHUGOSupport = false
+  
+  # Setting a value will load highlight.js and enable syntax highlighting using the style selected.
+  # See https://github.com/isagalaev/highlight.js/tree/master/src/styles for available styles
+  # A preview of above styles can be viewed at https://highlightjs.org/static/demo/
+  hjsStyle = "default"
+

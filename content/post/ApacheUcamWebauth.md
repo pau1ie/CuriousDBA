@@ -1,0 +1,245 @@
+---
+title: "ApacheUcamWebauth"
+date: 2017-07-18T10:25:02+01:00
+draft: true
+image: images/raven.jpg
+tags: ["Apache","proxy","Jenkins","Automation","Ansible"]
+---
+
+# Installing Apache and Ucam Webauth on Centos/RHEL7
+
+Apache is pretty easy:
+
+~~~~
+ yum install httpd
+~~~~
+
+Done.
+
+## Ucam Webauth
+
+It is [hosted on github](https://github.com/cambridgeuniversity/mod_ucam_webauth), but won't be much use to anyone
+who doesn't have a need to authenticate users with the University of Cambridge's single sign on which is called raven.
+
+I downloaded the SRPM from the [raven page](http://raven.cam.ac.uk/project/apache/) as suggested, and 
+compiled it. The following packages are prerequisites. I used the follwing ansible task:
+
+~~~~
+   - name: Install packages
+    become: true
+    yum: pkg="{{item}}" state=installed
+    with_items:
+      - httpd
+      - httpd-devel
+      - rpm-build
+      - openssl-devel
+      - gcc
+      - mod_ldap
+      - libselinux-python
+      - libsemanage-python
+~~~~
+
+httpd is Apache itself. http-devel, gcc, openssl-devel and rpm-build are required to build and package mod_ucamwebauth.
+These are all listed in the [UcamWebAuth install documentation](http://raven.cam.ac.uk/project/apache/INSTALL).
+mod_ldap is required because I want to look up the users who log in and make sure they are in my organisation.
+The two SElinux packages are needed later. 
+
+## Compiling the Source RPM
+
+I downloaded the srpm to the temporary directory.
+Should I download it to my Ansible files directory, so I know it is always going to be available? Not sure.
+
+~~~~
+  - name: Get the apache2. mod ucam webauth
+    get_url:
+      url: "http://raven.cam.ac.uk/project/apache/files/RPMS/mod_ucam_webauth2-2.0.2-1.src.rpm"
+      dest: /tmp
+~~~~
+
+The SRPM seems to have been created for a previous version of Redhat and never updated, because it expects to find
+the apxs utility in a different place to where it actually lives. This is easily fixed by creating a symlink.
+
+~~~~
+  - name: Create symlink so below build will work
+    file:
+      src: /bin/apxs
+      dest: /usr/sbin/apxs
+      state: link
+    become: True
+~~~~
+
+Building the srpm creates an RPM I can install. I use the
+[ansible command module](http://docs.ansible.com/ansible/command_module.html) to do this:
+
+~~~~
+  - name: Build the mod webauth
+    command: "rpmbuild --rebuild /tmp/mod_ucam_webauth2-2.0.2-1.src.rpm"
+    args:
+      creates: "/root/rpmbuild/RPMS/x86_64/mod_ucam_webauth2-2.0.2-1.x86_64.rpm"
+    become: true
+~~~~
+
+And now I am ready to install it using [Ansible's yum module](http://docs.ansible.com/ansible/yum_module.html).
+
+~~~~
+  - name: Install the webauth rpm
+    yum:
+      name: "/root/rpmbuild/RPMS/x86_64/mod_ucam_webauth2-2.0.2-1.x86_64.rpm"
+      state: present
+    become: True
+~~~~
+
+## Gather required information
+
+Now I need to configure Raven to work. As per section 3 of the
+[install document](http://raven.cam.ac.uk/project/apache/INSTALL)
+I need to download the Raven public keys and store them in the Apache configuration. I can use Ansible's
+[get_url module](http://docs.ansible.com/ansible/get_url_module.html) to do this, once I have created the 
+directory using the [file module](http://docs.ansible.com/ansible/file_module.html):
+
+~~~~
+  - name: Create directory for raven keys
+    file:
+      path: /etc/httpd/conf/webauth_keys/
+      state: directory
+      mode: "0755"
+      owner: root
+    become: True
+
+  - name: Download the raven keys
+    get_url:
+      url: "{{ item.url }}"
+      checksum: "md5:{{ item.check }}"
+      dest: "/etc/httpd/conf/webauth_keys"
+      mode: "0644"
+    become: True
+    with_items:
+      - { url: "https://raven.cam.ac.uk/project/keys/pubkey2", check: "084668f1b3806846168c591f1c210b76" }
+      - { url: "https://raven.cam.ac.uk/project/keys/pubkey2.crt", check: "9eadb8dc6b8e670e4990855a1411e7cd" }
+~~~~
+
+Now, I just need to configure Apache to use the mod_ucam_webauth module to allow authenticated users to access
+Jenkins as a reverse proxy. This was taken from a colleague (Thanks
+[Abraham](https://confluence.uis.cam.ac.uk/pages/viewpage.action?pageId=14329923)!), so I don't claim to understand it.
+
+However what I do understand is that when a user accesses the website, they get sent to Raven for authentication.
+If they authenticate correctly, it checks whether the user is in the [UIS](http://www.uis.cam.ac.uk/) (InstID=UIS)
+and whether they are in the list (Just me - psh35 in the example below). If these checks pass, the request is forwarded
+on to the [locally installed Jenkins](../jenkinsoncentos), with the username in the X-Forwarded-User header.
+
+Another important thing to remember is that mod_ucam_webauth requires a random cookie key, as per section 4 of the
+[install guide]( http://raven.cam.ac.uk/project/apache/INSTALL). uuidgen promises to create a globally unique identifier.
+This is amazing. The manual says:
+
+> The UUIDs generated by this library can be reasonably expected to be
+unique within a system, and unique across all systems.  They could
+be used, for instance, to generate unique HTTP cookies across multiple
+web servers without communication between the servers, and without fear
+of a name clash.
+
+> libuuid
+is part of the util-linux package since version 2.15.1 and is available from
+https://www.kernel.org/pub/linux/utils/util-linux/
+
+Amazing. Anyway, I can use that to satisfy the requirement for a unique string, and it is much better than
+bashing the keyboard, which always seems to generate "random" strings containing "asdf"!
+
+Here is how I generate the unique number:
+
+~~~~
+ - name: Create random string
+   shell: uuidgen
+   register: ravenkey
+   changed_when: false
+~~~~
+
+It simply runs uuidgen which is installed in linux, and records the output. The changed_when: false lets Ansible
+know we aren't making any changes on the server.
+
+## Installing Raven and proxy configuration
+
+Then I install the configuration with the following task:
+
+~~~~
+  - name: Deploy config
+    template:
+      src: ravenproxy.j2
+      dest: /etc/httpd/conf.d/ravenproxy.conf
+    register: configchanged
+    notify: Restart Apache
+    become: true
+~~~~
+
+I have a handler to restart Apache, which is what the notify does. The configuration being deployed with the
+ansible [template module](http://docs.ansible.com/ansible/template_module.html) is: 
+
+~~~~
+LoadModule ucam_webauth_module /usr/lib64/httpd/modules/mod_ucam_webauth.so
+
+<VirtualHost *:80>
+        AACookieKey "{{ ravenkey.stdout }}"
+        ServerAdmin psh35@cam.ac.uk
+        ServerName {{ ansible_nodename }}
+        ServerAlias {{ ansible_hostname }}
+        ProxyRequests Off
+        <Proxy *>
+                Order deny,allow
+                Allow from all
+                AuthType Ucam-WebAuth
+                AuthLDAPUrl ldap://ldap.lookup.cam.ac.uk/ou=people,o=University%20of%20Cambridge,dc=cam,dc=ac,dc=uk
+                <RequireAll>
+                        Require user psh35 rs442 am623
+                        Require ldap-filter instID=UIS
+                </RequireAll>
+        # prevent the client from setting this header
+        RequestHeader unset X-Forwarded-User
+        # Adds the X-Forwarded-User header that indicates the current user name.
+        # this portion came from http://old.nabble.com/Forcing-a-proxied-host-to-generate-REMOTE_USER-td2911573.html#a2914465
+        RewriteEngine On
+        # see the Apache documentation on why this has to be lookahead
+        RewriteCond %{LA-U:REMOTE_USER} (.+)
+        # this actually doesn't rewrite anything. what we do here is to set RU to the match above
+        # "NS" prevents flooding the error log
+        RewriteRule .* - [E=RU:%1,NS]
+        RequestHeader set X-Forwarded-User %{RU}e
+        </Proxy>
+        ProxyPreserveHost on
+        ProxyPass / http://localhost:8080/ nocanon
+        AllowEncodedSlashes NoDecode
+</VirtualHost>
+~~~~
+
+So the ravenkey.stdout is the key we generated earlier. Ansible_nodename and ansible_hostname are the fully qualified
+domain name and the short hostname.
+
+## It doesn't work!
+So that is Apache and raven configured. One problem, it doesn't work. I spent a couple of days looking into this, and the
+reason is SELinux. By default it configures Apache without permission to access the network. It needs this access
+for two reasons.
+
+  1. To do the LDAP lookup.
+  1. To do it's reverse proxy job, and forward the request on to the local Jenkins installation.
+
+To allow this to happen I found I needed to configure SE Linux to allow this. Ansible can do this so long as the 
+python SElinux management modules are  installed, which is why they were installed at the top. I suspect I wasn't the
+first person to have this problem - the example in the
+[seboolean ansible module documentation](http://docs.ansible.com/ansible/seboolean_module.html) is exactly
+what I want to do!
+
+~~~~
+  - name: Allow the web server to access the network
+    seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+    become: true
+~~~~
+
+I had this problem when testing in a VM. I think my friendly sysadmin sees SElinux as a bit of a liability, so will switch
+it off in my production server.
+
+## We aren't finished yet
+
+I have installed Jenkins, and using Apache as a reverse proxy I can authenticate users and pass them on. I haven't done any
+configuration of Jenkins at all. You can still access it on the URL, and it doesn't know that it is supposed to
+look at the header for the username. That comes next.

@@ -1,14 +1,13 @@
 ---
 title: "Criticalpatch"
-date: 2017-07-19T16:04:08+01:00
-draft: true
+date: 2017-07-21T11:02:09+01:00
 tags: [ "Ansible", "Oracle", "Critical Patch" ]
 image: images/patch.jpg
 ---
 
 # Oracle Critical Patches
 
-It was critical patch Tuesday yesterday. Because of the time differences
+It was critical patch Tuesday this week. Because of the time differences
 between here and the USA we actually only get to find out about the critical
 patches on Wednesday, though there is a pre release announcement.
 
@@ -17,7 +16,7 @@ complex as Oracles you can pretty much guarantee that
 there will be serious bugs somewhere in there which need patching every
 quarter. 
 
-With the types of organisations that run Oracle - the ones who can afford
+Considering the types of organisations that run Oracle - the ones who can afford
 to pay the license fees, i.e. rich and powerful ones, you can be sure
 that someone is looking into what changed for each release, and how they
 can benefit from stealing or changing information.

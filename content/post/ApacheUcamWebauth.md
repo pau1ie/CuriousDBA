@@ -1,7 +1,6 @@
 ---
 title: "ApacheUcamWebauth"
-date: 2017-07-18T10:25:02+01:00
-draft: true
+date: 2017-08-11T17:18:34+01:00
 image: images/raven.jpg
 tags: ["Apache","proxy","Jenkins","Automation","Ansible"]
 ---

@@ -49,7 +49,7 @@ Edit the controlfile as follows:
 So the first line of the create controlfile command looks like this:
 
 {{< highlight sql >}}
-CREATE CONTROLFILE REUSE SET DATABASE "CSRECO" RESETLOGS FORCE LOGGING ARCHIVELOG
+CREATE CONTROLFILE REUSE SET DATABASE "RECO" RESETLOGS FORCE LOGGING ARCHIVELOG
 {{< /highlight >}}
 
 Now, I have a healthy paranoia, such that before running this command I check
@@ -100,11 +100,11 @@ Control file created.
 
 ORA-00279: change 15295737437889 generated at 01/19/2018 12:02:30 needed for
 thread 1
-ORA-00289: suggestion : /CSRECO/archive/CSRECO_80_1_963178734.arc
+ORA-00289: suggestion : /RECO/archive/RECO_80_1_963178734.arc
 ORA-00280: change 15295737437889 for thread 1 is in sequence #80
 
 
-ORA-00308: cannot open archived log '/CSRECO/archive/CSRECO_80_1_963178734.arc'
+ORA-00308: cannot open archived log '/RECO/archive/RECO_80_1_963178734.arc'
 ORA-27037: unable to obtain file status
 Linux-x86_64 Error: 2: No such file or directory
 Additional information: 3
@@ -119,10 +119,10 @@ ALTER DATABASE OPEN RESETLOGS
 *
 ERROR at line 1:
 ORA-01113: file 1 needs media recovery
-ORA-01110: data file 1: '/CSRECO/system/system01.dbf'
+ORA-01110: data file 1: '/RECO/system/system01.dbf'
 
 
-ALTER TABLESPACE TEMP ADD TEMPFILE '/CSRECO/temp/temp01.dbf'
+ALTER TABLESPACE TEMP ADD TEMPFILE '/RECO/temp/temp01.dbf'
 *
 ERROR at line 1:
 ORA-01109: database not open
@@ -136,7 +136,7 @@ specify the correct year!
 SQL> recover database until cancel using backup controlfile snapshot time '19-JAN-2017 13:19:01';
 ORA-00283: recovery session canceled due to errors
 ORA-19839: snapshot datafile checkpoint time is greater than snapshot time
-ORA-01110: data file 1: '/CSRECO/system/system01.dbf'
+ORA-01110: data file 1: '/RECO/system/system01.dbf'
 {{< /highlight >}}
 
 The database needs to use the online redo log from the old database and it doesn't
@@ -147,7 +147,7 @@ try to cancel it.
 SQL> recover database until cancel using backup controlfile snapshot time '19-JAN-2018 13:19:01';
 ORA-00279: change 15295737437889 generated at 01/19/2018 12:02:30 needed for
 thread 1
-ORA-00289: suggestion : /CSRECO/archive/CSRECO_80_1_963178734.arc
+ORA-00289: suggestion : /RECO/archive/RECO_80_1_963178734.arc
 ORA-00280: change 15295737437889 for thread 1 is in sequence #80
 
 
@@ -155,7 +155,7 @@ Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
 CANCEL
 ORA-01547: warning: RECOVER succeeded but OPEN RESETLOGS would get error below
 ORA-01194: file 1 needs more recovery to be consistent
-ORA-01110: data file 1: '/CSRECO/system/system01.dbf'
+ORA-01110: data file 1: '/RECO/system/system01.dbf'
 
 
 ORA-01112: media recovery not started
@@ -167,12 +167,12 @@ So, I specify the latest online redo log, and it recovers OK.
 SQL> recover database until cancel using backup controlfile snapshot time '19-JAN-2018 13:19:01';
 ORA-00279: change 15295737437889 generated at 01/19/2018 12:02:30 needed for
 thread 1
-ORA-00289: suggestion : /CSRECO/archive/CSRECO_80_1_963178734.arc
+ORA-00289: suggestion : /RECO/archive/RECO_80_1_963178734.arc
 ORA-00280: change 15295737437889 for thread 1 is in sequence #80
 
 
 Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
-/CSRECO/flash/CS_OPS/onlinelog/o1_mf_4_f3m1s2y3_.log
+/RECO/flash/PROD/onlinelog/o1_mf_4_f3m1s2y3_.log
 Log applied.
 Media recovery complete.
 
@@ -186,13 +186,13 @@ alter database open resetlogs
 *
 ERROR at line 1:
 ORA-00344: unable to re-create online log
-'/CSRECO/flash/CSRECO/onlinelog/o1_mf_4_%u_.log'
+'/RECO/flash/RECO/onlinelog/o1_mf_4_%u_.log'
 ORA-27044: unable to write the header block of file
 Linux-x86_64 Error: 28: No space left on device
 Additional information: 3
 
 
-SQL> !df -h /CSRECO
+SQL> !df -h /RECO
 Filesystem            Size  Used Avail Use% Mounted on
 /dev/mapper/vold42p1  1.5T  1.5T  2.5G 100% /d48
 {{< /highlight >}}
@@ -207,7 +207,7 @@ alter database open resetlogs
 ERROR at line 1:
 ORA-00392: log 4 of thread 1 is being cleared, operation not allowed
 ORA-00312: online log 4 thread 1:
-'/CSRECO/flash/CSRECO/onlinelog/o1_mf_4_%u_.log'
+'/RECO/flash/RECO/onlinelog/o1_mf_4_%u_.log'
 {{< /highlight >}}
 
 Looking on the internet it seems that because the open resetlogs failed

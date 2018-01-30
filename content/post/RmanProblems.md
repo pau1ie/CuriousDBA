@@ -1,11 +1,12 @@
 ---
-title: "Rman Problems"
-date: 2018-01-09T10:31:37Z
-draft: true
+title: "Recovery Manager Problems"
+date: 2018-01-19T11:41:13Z
+tags: ["Oracle","DBA","Backup","Recovery","Rman"]
+image: images/recovery.png
 ---
 
 Lots of people seem to like Oracles Recovery manager. I am not one of them.
-I think this is because of a lack of understanding of how it works. It is
+I think this is because of a lack of understanding on my part of how it works. It is
 a complex beast, and at the same time has some annoying limitations.
 
 I like to automate things. I have a number of scripts to call RMAN to
@@ -13,10 +14,9 @@ do backups and restores in common situations. These fail far too often
 for my liking. I feel I should look into why. Maybe I can learn to love
 RMAN? We shall see.
 
-Here are some errors I got, and what I did to fix them.
+We got the following error:
 
-RMAN-06569: DATABASE: PROD does not match previous DATABASE: TEST
----
+### RMAN-06569: DATABASE: PROD does not match previous DATABASE: TEST
 
 This is because we have done a clone of production to test using a
 SAN snapshot, or by copying the files, then a create control file

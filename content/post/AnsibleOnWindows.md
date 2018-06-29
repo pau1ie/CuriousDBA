@@ -1,31 +1,21 @@
 ---
-title: "Ansible On Windows"
-date: 2018-01-30T15:12:11Z
-draft: true
+title: "Managing Windows with Ansible"
+date: 2018-06-26T18:05:23+01:00
+tags: ["Automation","Ansible","Windows","PowerShell"]
+image: images/engine-rooms-with-gears.jpg
 ---
 
-Historically I have been a Unix user, so I don't understand windows. I am
-pleased with my ansible build of the peoplesoft web servers, application
-servers and unix process schedulers. However, it appears that our
-Windows process schedulers aren't going away any time soon, so I ought
-to convert that to be an automated process.
+After a lot of trial and error, I finally found a way to make it work. Here is what I did.
 
-The ansible documentaton [mentions Windows](docs.ansible.com/ansible/latest/intro_windows.html)
-breifly, but it isn't clear what it means. I connect using a local user, but
-then use an Active Directory (AD) user to mount a share, and run the installer.
+As [noted before](../gettingwindowsandansibletoplaynicely/), rather than trying to run an installer from a share,
+I simply copied it on to the local disc of the VM.
 
-The ansible documentation suggests that basic authentication is the easiest. All
-you need to do is
+Before running Ansible on windows, the operating system has to be configured using (for example) the 
+[ConfigureRemotingForAnsible.ps1](https://github.com/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1)
+script. I took the defaults.  I didn't bother setting up any of the advanced options like CredSSP, as in practice there didn't seem to be
+any benefit.
 
-{{< highlight console >}}
-pip install pywinrm
-{{< /highlight >}}
-
-Smashing.
-
-But it doesn't work...
-
-Here is my setup. 
+I assume you are pretty familiar with Ansible. The structure is what you will recognise.
 
 {{< highlight console >}}
 |____inventory
@@ -34,250 +24,189 @@ Here is my setup.
 | |____tasks
 | | |____main.yml
 | |____files
-| | |____maprun.ps1
+| | |____schedrun.ps1
+| |____templates
+| | |____copyinstaller.bat
 |____win.yml
 {{< /highlight >}}
 
-Here is my inventory:
 
+Inventory File
+---
 
 {{< highlight ini >}}
 [win]
 winhost
 
-[winpsu:vars]
+[win:vars]
 ansible_user="ansible_user"
 ansible_password="Password1"
 ansible_connection="winrm"
 ansible_winrm_server_cert_validation=ignore
-win_user="our.ad.domain.cam.ac.uk\ad_user"
-win_pass="Password2"
 {{< /highlight >}}
 
-See how secure our passwords are!
+I use password authentication. It's all very low tech.
 
-And the playbook:
+Now, the playbook. This copies the file to the local location.
+
+win.yml
+---
 
 {{< highlight YAML >}}
-win.yml 
-
 ---
-  - name: Windows PSU
+  - name: Windows
     hosts: winpsu
     roles:
       - psw
 {{< /highlight >}}
 
-map.ps1
-{{< highlight powershell >}}
-param(
-  $map_user,
-  $map_password,
-  $script
-)
-# net use Z \\internal\general\Peoplesoft_Applications $map_password /user:$map_user
-echo a
-#$PWord = ConvertTo-SecureString $map_password -AsPlainText -Force
-$PWord="$map_password"|ConvertTo-SecureString -AsPlainText -Force
-echo b
-#$myCreds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $map_user,$PWord
-$myCreds = New-Object System.Management.Automation.PsCredential($map_user,$PWord)
-echo c
-echo "$map_user"
-echo "$map_password"
-New-PSDrive -Name "Z" -PSProvider "FileSystem" -Root "\\internal\general" -Credential $myCreds
-echo Invoke-Command -ScriptBlock $script
-{{< /highlight >}}
+This just calls the role.
 
-And main.yml
-{{< highlight YAML >}}
+main.yml
 ---
-  - name: Ping windows server
-    win_ping:
 
-  - name: Remove services
-    win_service:
-      name: "{{ item }}"
-      state: absent
+{{< highlight YAML >}}
+- name: Create directories for use by the install
+    win_file:
+      path: "{{ item }}"
+      state: directory
     with_items:
-      - service1
-      - service2
+      - "{{ install_base }}"
+      - "{{ ansibletmp }}"
+      - "{{ scriptdir }}"
 
-  - name: Remove the peoplesoft installation
-    script: 'files/maprun.ps1 -map_user "{{ win_user }}" -map_password "{{ win_pass }}" -script "dir Z:"'
-    register: cleanup
+  - name: Deploy copy script
+    win_template:
+      src: templates/copyinstaller.bat.j2
+      dest: "{{ ansibletmp }}\\copyinstaller.bat"
 
-  - debug: var=cleanup
+  - name: Copy install files to local VM
+    script: 'files/schedbat.ps1 -script {{ ansibletmp }}\\copyinstaller.bat'
+    register: copy
+
+  - debug: var=copy
+
+  - name: Install puppet from the MSI file
+    win_package:
+      path: "{{ puppet_installer }}"
+      state: present
+
+  - name: Stop the puppet agent service from running to stop all the error messages.
+    win_service:
+      name: "Puppet Agent"
+      state: Stopped
+      start_mode: disabled
+
+  - name: Run the installer
+    script: "files/scheduleps1.ps1 -script \"{{ install_path }}\\psft-dpk-setup.ps1 -env_type midtier -deploy_only -silent\" -logfile {{ ansibletmp }}\\install.log"
+    args:
+      creates: "{{ ps_home }}\\appserv\\psadmin.exe"
+    register: installfiles
+
+  - debug: var=installfiles
+
 {{< /highlight >}}
 
-Give it a go, and see what happens:
-{{< highlight console >}}
-$ ansible-playbook -i inventory/csopswin psw.yml 
+The first step creates some directories. The next copies across a batch file, which is used to copy
+the installer from the share where it is downloaded. 
 
-PLAY [Windows PSU] ***********************************************************************************************************************************************
+copyinstaller.bat
+---
 
-TASK [Gathering Facts] *******************************************************************************************************************************************
-/usr/lib/python2.7/site-packages/urllib3/connectionpool.py:769: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.org/en/latest/security.html
-  InsecureRequestWarning)
-ok: [winhost]
-
-TASK [psw : Ping windows server] *********************************************************************************************************************************
-/usr/lib/python2.7/site-packages/urllib3/connectionpool.py:769: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.org/en/latest/security.html
-  InsecureRequestWarning)
-ok: [winhost]
-
-TASK [psw : Remove services] *************************************************************************************************************************************
-/usr/lib/python2.7/site-packages/urllib3/connectionpool.py:769: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.org/en/latest/security.html
-  InsecureRequestWarning)
-ok: [winhost] => (item=service1)
-ok: [winhost] => (item=service2)
-
-TASK [psw : Remove the peoplesoft installation] ******************************************************************************************************************
-/usr/lib/python2.7/site-packages/urllib3/connectionpool.py:769: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.org/en/latest/security.html
-  InsecureRequestWarning)
-fatal: [winhost]: FAILED! => {"changed": true, "failed": true, "rc": 1, "stderr": "New-PSDrive : A specified logon session does not exist. It may already have \r\nbeen terminated\r\nAt C:\\Users\\ansible_user\\AppData\\Local\\Temp\\ansible-tmp-1517324720.24-2169618948479\r\n68\\maprun.ps1:16 char:1\r\n+ New-PSDrive -Name \"Z\" -PSProvider \"FileSystem\" -Root \"\\\\internal\\general\" \r\n-Crede ...\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n~~~\r\n    + CategoryInfo          : InvalidOperation: (Z:PSDriveInfo) [New-PSDrive], \r\n    Win32Exception\r\n    + FullyQualifiedErrorId : CouldNotMapNetworkDrive,Microsoft.PowerShell.Com \r\n   mands.NewPSDriveCommand\r\n \r\n\r\n", "stdout": "a\r\nb\r\nc\r\nour.ad.domain.cam.ac.uk\\ad_user\r\nPassword2\r\nInvoke-Command\r\n-ScriptBlock\r\ndir Z:\r\n", "stdout_lines": ["a", "b", "c", "our.ad.domain.cam.ac.uk\\ad_user", "Password2", "Invoke-Command", "-ScriptBlock", "dir Z:"]}
-        to retry, use: --limit @/home/psh35/scripts/camsis-ansible/psw.retry
-
-PLAY RECAP *******************************************************************************************************************************************************
-winhost                   : ok=3    changed=0    unreachable=0    failed=1   
+{{<highlight batchfile>}}
+#jinja2:newline_sequence:'\r\n'
+{{ '>' }} "{{ ansibletmp }}\copy.txt" {{ '2>&1' }} (
+net use Z: \\internal\general\Peoplesoft_Applications /USER:{{ win_user }} {{ win_pass }}
+mkdir "{{ install_base }}"
+robocopy "z:\{{ install_dir }}" "{{ install_base }}\{{ install_dir }}" /MIR
+)
 {{< /highlight >}}
 
-So it works apart from I can't get it to map the share. I think the reason for
-this is because I need to use credential delegation. To do this, according to
-the documentation I need to add ansible_winrm_transport=credssp. So now my
-inventory looks like this:
+ This is a template because it was easier to pass the directories this way. Different
+versions of the installer are in different directories. The bash script is simply a 
+few commands wrapped in brackets, and the output is all redirected to a file.
 
+This script is copied with the variables replaced.
 
-{{< highlight ini >}}
-[win]
-winhost
+Next we run a powershell script.
 
-[winpsu:vars]
-ansible_user="ansible_user"
-ansible_password="Password1"
-ansible_connection="winrm"
-ansible_winrm_transport=credssp
-ansible_winrm_server_cert_validation=ignore
-win_user="our.ad.domain.cam.ac.uk\ad_user"
-win_pass="Password2"
+{{<highlight PowerShell>}}
+param(
+  [string]$script
+)
+function Invoke-Script {
+  param(
+    [string]$script
+  )
+  $invokeScript = {
+    param(
+      [string]$script
+    )
+    $f=[system.io.fileinfo]$script ;
+    $baseFile = join-path $f.DirectoryName $f.BaseName
+    if (Test-Path("$baseFile.DONE")) {
+      Move-Item "$baseFile.DONE" "$baseFile.$((Get-Date -Format O) -replace ':','').BAK" ;
+    }
+    Set-ExecutionPolicy Bypass -Force | Out-File "$baseFile.PROCESSING" -Append;
+    Get-ExecutionPolicy -list | Out-File "$baseFile.PROCESSING" -Append;
+    $Out=Start-Process -FilePath "$env:comspec" -ArgumentList "/c $script" -Verb runAs -Wait;
+    Write-Output "$?" | Out-File "$baseFile.PROCESSING" -Append ;
+    Write-Output $Out | Out-File "$baseFile.PROCESSING" -Append ;
+    Move-Item "$baseFile.PROCESSING" "$baseFile.DONE" ;
+  } ;
+  # remove the job (if exists), create a new one.
+  # NOTE: this will clobber any previous job
+  $jobName = "Invoke-Script" ;
+  $result = Get-ScheduledJob | Where { $_.Name -eq "$jobName" } ;
+  if ($result) {
+    Unregister-ScheduledJob -Name "$jobName" ;
+  }
+  $O = New-ScheduledJobOption -RunElevated
+  Register-ScheduledJob -Name "$jobName" -RunNow -ScriptBlock $invokeScript  -ArgumentList $script -ScheduledJobOption $O ;
+}
+# when passed in from ansible, be sure to wrap windows path in ''
+$script = $script -replace "'","" ;
+$f=[system.io.fileinfo]$script ;
+$baseFile = join-path $f.DirectoryName $f.BaseName
+Write-Host "Running: $script" ;
+Invoke-Script -script $script ;
+
+# monitor for DONE file and report
+$doneFile =  "$baseFile.DONE" ;
+Start-Sleep -s 5 ;
+while(!(Test-Path $doneFile)) {
+  Start-Sleep -s 5 ;
+}
+write-output "Base file $baseFile" ;
+Get-Content $doneFile ;
 {{< /highlight >}}
 
-Also, I need to install credssp for python, or I get the following error:
+This is based on a script by Jason Huggins in an
+[ansible bug report](https://github.com/ansible/ansible-modules-extras/issues/287)
+Thanks Jason!
 
-{{< highlight console >}}
-$ ansible-playbook -i inventory/csopswin psw.yml 
+This is because a Windows share is mounted as part of a session. The RDP connection is not
+allowed a session. But a scheduled task is. The RDP connection is allowed to create
+a task. So that is what we do.
+The job is scheduled to call the contents of the $invokeScript variable. This sets the
+execution policy to allow the file to be run, then runs the batch file. Lastly it
+renames a file to .DONE. The rest of the script waits for this rename, so we know
+once the script completes, the scheduled task has completed. Once it is complete, it
+writes the two files to standard output. Ansible can be told to register the output and
+write it out using a debug statement.
 
-PLAY [Windows PSU] ***********************************************************************************************************************************************
+The next step installs puppet, which is what Oracle have chosen to manage PeopleSoft.
+This creates a job which keeps trying to talk to the puppet master (Puppet has an agent
+installed on the node which talks to a controller, the puppet master, to get instructions.
+Since we don't have a master, this continually errors, so it is best to switch it off.
 
-TASK [Gathering Facts] *******************************************************************************************************************************************
-fatal: [csopspsw]: UNREACHABLE! => {"changed": false, "msg": "credssp: requests auth method is credssp, but requests-credssp is not installed", "unreachable": true}
-        to retry, use: --limit @/home/psh35/scripts/camsis-ansible/psw.retry
+Lastly the installer is run from from the folders that were copied across using the same script
+as before to create it a session. I am not sure if this is necessary, it was left over
+from when I was trying to run it from the share, which proved rather painful. If you
+do want to try running from a share, you have to change Internet Explorer security to allow it.
 
-PLAY RECAP *******************************************************************************************************************************************************
-csopspsw                   : ok=0    changed=0    unreachable=1    failed=0   
-{{< /highlight >}}
+There is more in my playbook, but this is the difficult part. The rest is just doing
+the same I would in unix, but replacing modules where necessary with the
+[windows equivalents](https://docs.ansible.com/ansible/latest/modules/list_of_windows_modules.html). 
 
-Install it with pip
-
-{{< highlight console >}}
-# pip install pywinrm[credssp]
-Requirement already satisfied: pywinrm[credssp] in /usr/lib/python2.7/site-packages
-Requirement already satisfied: xmltodict in /usr/lib/python2.7/site-packages (from pywinrm[credssp])
-Collecting requests>=2.9.1 (from pywinrm[credssp])
-  Downloading requests-2.18.4-py2.py3-none-any.whl (88kB)
-    100% |████████████████████████████████| 92kB 2.7MB/s 
-Requirement already satisfied: requests_ntlm>=0.3.0 in /usr/lib/python2.7/site-packages (from pywinrm[credssp])
-Requirement already satisfied: six in /usr/lib/python2.7/site-packages (from pywinrm[credssp])
-Collecting requests-credssp>=0.0.1 (from pywinrm[credssp])
-  Downloading requests_credssp-0.1.0-py2.py3-none-any.whl
-Collecting certifi>=2017.4.17 (from requests>=2.9.1->pywinrm[credssp])
-  Downloading certifi-2018.1.18-py2.py3-none-any.whl (151kB)
-    100% |████████████████████████████████| 153kB 2.6MB/s 
-Collecting chardet<3.1.0,>=3.0.2 (from requests>=2.9.1->pywinrm[credssp])
-  Downloading chardet-3.0.4-py2.py3-none-any.whl (133kB)
-    100% |████████████████████████████████| 143kB 3.3MB/s 
-Collecting idna<2.7,>=2.5 (from requests>=2.9.1->pywinrm[credssp])
-  Downloading idna-2.6-py2.py3-none-any.whl (56kB)
-    100% |████████████████████████████████| 61kB 5.1MB/s 
-Collecting urllib3<1.23,>=1.21.1 (from requests>=2.9.1->pywinrm[credssp])
-  Downloading urllib3-1.22-py2.py3-none-any.whl (132kB)
-    100% |████████████████████████████████| 133kB 3.0MB/s 
-Requirement already satisfied: python-ntlm3 in /usr/lib/python2.7/site-packages (from requests_ntlm>=0.3.0->pywinrm[credssp])
-Collecting pyOpenSSL>=16.0.0 (from requests-credssp>=0.0.1->pywinrm[credssp])
-  Downloading pyOpenSSL-17.5.0-py2.py3-none-any.whl (53kB)
-    100% |████████████████████████████████| 61kB 5.8MB/s 
-Collecting ntlm-auth (from requests-credssp>=0.0.1->pywinrm[credssp])
-  Downloading ntlm_auth-1.0.6-py2.py3-none-any.whl
-Collecting cryptography>=2.1.4 (from pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-  Downloading cryptography-2.1.4-cp27-cp27mu-manylinux1_x86_64.whl (2.2MB)
-    100% |████████████████████████████████| 2.2MB 458kB/s 
-Collecting cffi>=1.7; platform_python_implementation != "PyPy" (from cryptography>=2.1.4->pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-  Downloading cffi-1.11.4-cp27-cp27mu-manylinux1_x86_64.whl (406kB)
-    100% |████████████████████████████████| 409kB 1.5MB/s 
-Requirement already satisfied: enum34; python_version < "3" in /usr/lib/python2.7/site-packages (from cryptography>=2.1.4->pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-Collecting asn1crypto>=0.21.0 (from cryptography>=2.1.4->pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-  Downloading asn1crypto-0.24.0-py2.py3-none-any.whl (101kB)
-    100% |████████████████████████████████| 102kB 7.2MB/s 
-Requirement already satisfied: ipaddress; python_version < "3" in /usr/lib/python2.7/site-packages (from cryptography>=2.1.4->pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-Requirement already satisfied: pycparser in /usr/lib/python2.7/site-packages (from cffi>=1.7; platform_python_implementation != "PyPy"->cryptography>=2.1.4->pyOpenSSL>=16.0.0->requests-credssp>=0.0.1->pywinrm[credssp])
-Installing collected packages: certifi, chardet, idna, urllib3, requests, cffi, asn1crypto, cryptography, pyOpenSSL, ntlm-auth, requests-credssp
-  Found existing installation: chardet 2.2.1
-    Uninstalling chardet-2.2.1:
-      Successfully uninstalled chardet-2.2.1
-  Found existing installation: idna 2.4
-    Uninstalling idna-2.4:
-      Successfully uninstalled idna-2.4
-  Found existing installation: urllib3 1.10.2
-    Uninstalling urllib3-1.10.2:
-      Successfully uninstalled urllib3-1.10.2
-  Found existing installation: requests 2.6.0
-    DEPRECATION: Uninstalling a distutils installed project (requests) has been deprecated and will be removed in a future version. This is due to the fact that uninstalling a distutils project will only partially uninstall the project.
-    Uninstalling requests-2.6.0:
-      Successfully uninstalled requests-2.6.0
-  Found existing installation: cffi 1.6.0
-    Uninstalling cffi-1.6.0:
-      Successfully uninstalled cffi-1.6.0
-  Found existing installation: cryptography 1.7.2
-    Uninstalling cryptography-1.7.2:
-      Successfully uninstalled cryptography-1.7.2
-  Found existing installation: pyOpenSSL 0.13.1
-    DEPRECATION: Uninstalling a distutils installed project (pyOpenSSL) has been deprecated and will be removed in a future version. This is due to the fact that uninstalling a distutils project will only partially uninstall the project.
-    Uninstalling pyOpenSSL-0.13.1:
-      Successfully uninstalled pyOpenSSL-0.13.1
-Successfully installed asn1crypto-0.24.0 certifi-2018.1.18 cffi-1.11.4 chardet-3.0.4 cryptography-2.1.4 idna-2.6 ntlm-auth-1.0.6 pyOpenSSL-17.5.0 requests-2.18.4 requests-credssp-0.1.0 urllib3-1.22
-{{< /highlight >}}
-
-Try again...
-
-{{< highlight console >}}
-[psh35@whisk camsis-ansible]$ ansible-playbook -i inventory/csopswin psw.yml 
-
-PLAY [Windows PSU] ***********************************************************************************************************************************************
-
-TASK [Gathering Facts] *******************************************************************************************************************************************
-fatal: [csopspsw]: UNREACHABLE! => {"changed": false, "msg": "credssp: 'module' object has no attribute 'TLSv1_2_METHOD'", "unreachable": true}
-        to retry, use: --limit @/home/psh35/scripts/camsis-ansible/psw.retry
-
-PLAY RECAP *******************************************************************************************************************************************************
-csopspsw                   : ok=0    changed=0    unreachable=1    failed=0   
-{{< /highlight >}}
-
-This is more difficult. Ansible needs pyOpenSSL version 17 or something, which
-is installed by pip. However RHEL installs version 0.13, which is first in the
-python path. 
-
-
-{{< highlight console >}}
-$ python
-Python 2.7.5 (default, May  3 2017, 07:55:04) 
-[GCC 4.8.5 20150623 (Red Hat 4.8.5-14)] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> import sys
->>> print (sys.path)
-['', '/usr/lib/python2.7/site-packages/oraclesql_pygments_lexer-0.1-py2.7.egg', '/usr/lib64/python27.zip', '/usr/lib64/python2.7', '/usr/lib64/python2.7/plat-linux2', '/usr/lib64/python2.7/lib-tk', '/usr/lib64/python2.7/lib-old', '/usr/lib64/python2.7/lib-dynload', '/usr/lib64/python2.7/site-packages', '/usr/lib64/python2.7/site-packages/gtk-2.0', '/usr/lib/python2.7/site-packages']
-{{< /highlight >}}
-
-The RPM version is in /usr/lib64/python2.7/site-packages/OpenSSL while the pip
-version is in /usr/lib/python2.7/site-packages/OpenSSL/
-Since the RPM version is first in the path it gets called.
 

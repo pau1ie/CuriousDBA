@@ -37,7 +37,10 @@ The only way to tune this is for the lock to be held for a shorter period of tim
 
 See http://arup.blogspot.co.uk/2011/01/more-on-interested-transaction-lists.html
 
-  1* select statistic_name, value from v$segment_statistics where object_name = 'PSLOCK' order by value
+{{<highlight console>}}
+  1* select statistic_name, value
+  2  from v$segment_statistics
+  3  where object_name = 'PSLOCK' order by value
 SQL> /
 
 STATISTIC_NAME                                                        VALUE
@@ -67,10 +70,11 @@ physical write requests                                                 453
 physical writes                                                         453
 logical reads                                                        141888
 db block changes                                                     149680
+{{</highlight>}}
 
 The same is true for PSVERSION, and for the indexes which only have waits on reads.
 
-Having said that, I don?t think the proposed change will do any harm. It might make the table longer as we are allocating more space for the ITL (Actually it will make it shorter as there is so much free space ? there must have been a lot of rows removed from this table), but apart from that it will have no effect.
+Having said that, I don't think the proposed change will do any harm. It might make the table longer as we are allocating more space for the ITL (Actually it will make it shorter as there is so much free space - there must have been a lot of rows removed from this table), but apart from that it will have no effect.
 
 I can only assume those who see performance improvements were suffering ITL waits, or the business process has moved to a stage where they get fewer locks and they will return.
 

@@ -1,7 +1,7 @@
 ---
-title: "Tmadmin"
-date: 2018-06-29T16:32:00+01:00
-draft: true
+title: "Reducing Downtime With Tmadmin"
+date: 2018-09-21T14:23:00+01:00
+tags: ["PeopleSoft", "Uptime","Tmadmin"]
 ---
 
 ## Reducing Downtime ##
@@ -13,7 +13,7 @@ Lets have a look.
 
 ## Purging the cache ##
 
-This can't be done if cache sharing is enabled.
+This can't be done if cache sharing is enabled, but if it isn't, it clears the cache for each process one at a time without downtime.
 
 * 1) Application Server
 * 1) APPDOM (Or whichever domain you want to purge)
@@ -46,7 +46,7 @@ $ ps -o pid,ppid,rss,args -u psadm2 --sort rss | grep PSAPPS
 {{</highlight>}}
 
 Look at that! An application server process is taking 2G RAM! No wonder the server is running out of memory. We can see from the process that the one using
-the most memory is in group 99 and instance 1 from the -g and -i parameters.
+the most memory is in group 99 and instance 1 from the -g and -i parameters in the command line field of the ps output.
 
 So we can shut it down. It should be safe to because there is another one running. I start tmadmin like I did above, and run:
 
@@ -55,3 +55,11 @@ shutdown -i 1
 boot -i 1
 {{</highlight>}}
 
+This shits the process with instance number 1. Be careful, potentially
+there could be two processes with instance number 1 in different groups.
+
+## Conclusion
+
+Since peoplesoft tends to have multiple application servers, it is possible
+to shut one process down and the rest carry on the processing so no
+downtime is incurred. Doing this requires reading up on tmadmin.

@@ -1,7 +1,6 @@
 ---
 title: "Vagrant Multi VM provisioning"
-date: 2018-06-27T15:52:45+01:00
-draft: False
+date: 2018-08-10T15:02:45+01:00
 tags: ["vm","automation","vagrant","scripting" ]
 ---
 

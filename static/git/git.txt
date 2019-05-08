@@ -1,0 +1,29 @@
+$ ssh-keygen -t rsa -m PEM -C "psh35@cam.ac.uk"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/m//.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /m//.ssh/id_rsa.
+Your public key has been saved in /m//.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:O/wmbdpLqDKjvFGKRd601EMeXihm2NSQUBkKRWd2OMA psh35@cam.ac.uk
+The key's randomart image is:
++---[RSA 2048]----+
+|.+=BOB+..        |
+| .E=X*oo         |
+|  oooo=          |
+| o + . .         |
+|  o +   S        |
+| o o   . o       |
+|. o     =..      |
+| . .+  ..=+      |
+|  +o +. .=+.     |
++----[SHA256]-----+
+
+
+
+
+
+
+
+

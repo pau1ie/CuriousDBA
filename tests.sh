@@ -1,1 +1,1 @@
-hugo --theme=casper --buildDrafts server
+hugo --theme=casper --buildDrafts server --disableFastRender

@@ -55,8 +55,8 @@ shutdown -i 1
 boot -i 1
 {{</highlight>}}
 
-This shits the process with instance number 1. Be careful, potentially
-there could be two processes with instance number 1 in different groups.
+This shuts the process with instance number 1. Be careful, potentially
+there could be a number of processes with instance number 1 in different groups.
 
 ## Conclusion
 

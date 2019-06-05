@@ -1,8 +1,7 @@
 ---
 title: "Creating Test Data"
-date: 2019-05-08T14:45:54+01:00
+date: 2019-05-13T10:45:54+01:00
 tags: ['SQL','Automation','plsql','language','oracle','parsing','scripting','testing']
-draft: true
 ---
 
 Here are some notes as to how to create test data from real data with SQL.
@@ -117,7 +116,7 @@ language, so we could:
 - return rows with more realistic distributions.
 - return free text columns to avoid having multiple copies of the whole free text in the SQL statement.
 - return one of a number of free texts (For example, we could pick a random chapter
-from Pride and Prejudice.
+from Pride and Prejudice).
 
 If I remember correctly, PL/SQL allows you to remember data in a session,
 so the first row could select the values and counts from the remote table, then return values in the

@@ -10,6 +10,7 @@ Sometimes you see a private shared lane which has a gate to stop people using it
 have padlocks in a chain. Anyone who has a padlock in the chain can open it with the key in their keyring.
 
 ![Padlocks on a gate](../../images/padlocks.jpg)
+<small><br/>[Image from pixabay](https://pixabay.com/photos/security-symbol-castle-padlock-670206/)</small>.
 
 This is very much like how the secure keys work. If someone else wants to be able to use the gate, they have to
 get one of the three key holders to go to the gate with them, open their padlock, and insert their padlock into
@@ -47,7 +48,8 @@ gpg --output mykey.asc --armor --export email@add.ress
 
 ```
 
-The first command lists the keys, and the second one exports by email address.
+The first command lists the keys, and the second one exports by email address, so the email address is the email
+that was put in earlier.
 
 Send the key to someone who has acccess to the repository and they will add it to the keyring.
 

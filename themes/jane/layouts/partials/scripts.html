@@ -1,0 +1,87 @@
+<!-- js -->
+{{ if .Site.Params.bootcdn -}}
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/slideout/1.0.1/slideout.min.js" crossorigin="anonymous"></script>
+{{- else if .Site.Params.publicCDN.enable -}}
+  {{ .Site.Params.publicCDN.jquery | safeHTML }}
+  {{ .Site.Params.publicCDN.slideout | safeHTML }}
+{{- else -}}
+  <script type="text/javascript" src="{{ "lib/jquery/jquery-3.2.1.min.js" | relURL }}"></script>
+  <script type="text/javascript" src="{{ "lib/slideout/slideout-1.0.1.min.js" | relURL }}"></script>
+{{- end }}
+<script type="text/javascript" src="{{ "dist/jane.min.js?v=2.7.0" | relURL }}"></script>
+
+{{- if and (or .Params.mathjax (and .Site.Params.mathjax (ne .Params.mathjax false))) (or .IsPage .IsHome) }}
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+{{- end }}
+
+{{- with .Site.Params.tencent_analytics -}}
+<script id="tencent_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+	hm.src = "//tajs.qq.com/stats?sId={{.}}";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+{{- end }}
+
+{{- with .Site.Params.baidu_analytics -}}
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?{{.}}";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+{{- end }}
+
+<!-- baidu_push -->
+{{- if .Site.Params.baidu_push -}}
+<script id="baidu_push">
+  (function(){
+    if (window.location.hostname === 'localhost') return;
+    var bp = document.createElement('script'); bp.async = true;
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+{{- end }}
+
+<!-- Load PhotoSwipe js if the load-photoswipe shortcode has been used -->
+{{ if or .Site.Params.photoswipe .Site.Params.fancybox }}
+  {{ if .Site.Params.bootcdn }}
+    <script src="{{ " /js/load-photoswipe.js " | relURL }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk="
+      crossorigin="anonymous"></script>
+  {{ else }}
+    <script type="text/javascript" src="{{ "/js/load-photoswipe.js" | relURL }}"></script>
+    <script type="text/javascript" src="{{ "/lib/photoswipe/photoswipe.min.js" | relURL}}"></script>
+    <script type="text/javascript" src="{{ "/lib/photoswipe/photoswipe-ui-default.min.js" | relURL}}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- custom js -->
+{{ range .Site.Params.customJS }}
+<script src="{{ "/js/" | relURL }}{{ . }}"></script>
+{{ end }}

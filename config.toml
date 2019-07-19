@@ -1,5 +1,5 @@
 #baseURL = "http://localhost:1313/"
-baseURL = "http://people.ds.cam.ac.uk/psh35/blog/"
+baseURL = "https://curiousdba.netlify.com/"
 title = "Curious DBA"
 enableRobotsTXT = true
 enableEmoji = true

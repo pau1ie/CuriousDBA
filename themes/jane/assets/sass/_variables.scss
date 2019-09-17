@@ -74,13 +74,19 @@ $global-headings: (
   h6: 1em
 ) !default;
 
+@font-face {
+  font-family: 'Chancery';
+  src: url('../fonts/texgyrechorus-mediumitalic.otf');
+  font-weight: lighter;
+  font-style: normal;
+}
 
 // ========== Header ========== //
 // Font size of the logo.
 $logo-font-size: 36px !default;
 
 // Font family of the logo.
-$logo-font-family: TeXGyreChorus, Chancery, cursive, LiSu, sans-serif !default;
+$logo-font-family: Chancery, cursive, LiSu, sans-serif !default;
 
 // Margin of menu item.
 $menu-item-margin-left: 10px !default;
@@ -172,7 +178,7 @@ $content-table-border-color: darken($deputy-color, 3%) !default;
 
 // ========== Code ========== //
 // Color of the code.
-$code-color: #c7254e !default;
+$code-color: #859900 !default;
 
 // Font size of code.
 $code-font-size: 0.9em !default;

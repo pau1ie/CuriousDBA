@@ -1,6 +1,6 @@
 ---
 title: "Moving"
-date: 2019-07-19T16:24:21+01:00
+date: 2019-09-17T16:24:21+01:00
 tags: [ "Automation","GitHub","Netlify","Blog"]
 ---
 

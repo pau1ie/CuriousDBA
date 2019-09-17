@@ -90,8 +90,17 @@
 - id: read_zh-cn
   translation: 中文阅读
 
+- id: read_zh-tw
+  translation: 中文閱讀
+
 - id: read_pt
   translation: Leia em português
 
 - id: read_fr
   translation: Lire en français
+
+- id: read_de
+  translation: Lese in Deutsch
+
+- id: language
+  translation: Язык

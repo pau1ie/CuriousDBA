@@ -32,12 +32,12 @@ This is the easiest one. Just use the static string instead of the column name `
 ## Text appended with a number
 
 This is pretty simple as well, there are two variants of this. One is to use the sequence number i.e.
-```'text' || lpad(rownum,99,'0')```. In this case the sequence number is padded so the row is always
+`'text' || lpad(rownum,99,'0')`. In this case the sequence number is padded so the row is always
 the same length, where 99 is the length of the number. I allow the user to specify the whole field
 length then subtract the length of the static text.
 
 Another option is that there is an id in the table. In this case the ID can be appended:
-```text' || lpad(id,99,'0')```
+`text' || lpad(id,99,'0')`
 This helps the testers to find the test data. We use this for email addresses, so it is easy to find the
 test data who the email is about.
 

@@ -4,6 +4,12 @@ date: 2019-09-27T15:00:36+01:00
 tags: ["Automation",'Scripting',"Ansible","Secrets",'Security']
 ---
 
+Often configuring a system involves running scripts and passing
+passwords as a parameter. If all goes well, this is fine, Ansible
+just reports the task has changed. If not, the password is logged,
+which is bad if the output is being sent to people who shouldn't
+know it. Here are some thoughts on how to get round that.
+
 ## Setup
 
 Start with the following playbook for demonstration purposes:

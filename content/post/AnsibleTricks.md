@@ -10,10 +10,10 @@ tags: ['Ansible','Automation','Performance','Scripting','Secrets','Security']
 
 I am working on extending my automation to do some new things. We refresh test environments from production.
 Previously we used to copy all the code from production back to development. Now we build the VMs from scratch,
-so we don't need to do this any more, but it would be convenient to call this in the middle of the
+so we don't need to do this any more, but it would be convenient to call the VM build in the middle of the
 refresh.
 
-You can easily do this using import_playbook. This makes the playbook work in the same way as if it was run.
+You can easily call a playbook from another one using `import_playbook`. This makes the playbook work in the same way as if it was run.
 
 See the documentation for the difference between [include and import](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html).
 

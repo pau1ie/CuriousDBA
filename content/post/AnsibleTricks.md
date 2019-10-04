@@ -1,6 +1,6 @@
 ---
 title: "Ansible Tricks"
-date: 2019-10-04:11:36+01:00
+date: 2019-10-04T11:11:36+01:00
 tags: ['Ansible','Automation','Performance','Scripting','Secrets','Security']
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Ansible Tricks"
 date: 2019-09-27T14:14:36+01:00
-draft: true
+tags: ['Ansible','Automation','Performance','Scripting','Secrets','Security']
 ---
 
 # Some Useful Ansible tricks
@@ -27,6 +27,14 @@ I can run the following:
 ansible-playbook -i inventory playbook.yml --start-at-task="Task Name"
 ```
 
+The role can be included as well, in case two roles have the same task in:
+
+```console
+ansible-playbook -i inventory playbook.yml --start-at-task="role : Task Name"
+```
+
+This is the same format Ansible prints out the task name on the screen.
+
 Sometimes the error is caused by an error in a script that was deployed by a previous step. In that case,
 obviously once the script is corrected the playbook needs to be restarted from the step that deploys
 the script.
@@ -43,7 +51,7 @@ callback_whitelist = profile_tasks
 ## Ansible Configuration File
 
 I am not the sysadmin to my management server, and even though I know the root password
-I don't want to step on anyones toes by changing `ansible.cfg` for everyone.
+I don't want to step on anyone's toes by changing `ansible.cfg` for everyone.
 
 It turns out that putting `ansible.cfg` into the same path as the playbook means it is 
 read and overrides the default, so no need to mess with anyone elses settings, or
@@ -81,3 +89,4 @@ user. Unprivileged become user would be unable to read the file."}
 
 This happened because the `become` user didn't exist, because I had missed out running
 the part that created it. It is reasonable for it to fail, but the error isn't very clear.
+Hopefully this will help someone in the future (Probably me!)

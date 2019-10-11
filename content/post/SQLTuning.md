@@ -13,7 +13,7 @@ supposed to be doing, or understand the structure of the data within the databas
 
 ## Talk to the Developer
 
-When presented with some slow SQL, the first thing to do is to speak to someone who knows what it is supposed to do, ideally the
+When presented with some slow SQL, the first thing to do is to speak to someone who knows what it is supposed to do. Ideally the
 person who wrote it or is responsible for maintaining it. It is possible that as they are explaining what it does, you will work out something
 that it is doing that it need not. Also as you talk about the way data is selected and how you would expect the optimiser to find the data,
 it might become obvious that the optimiser can't do what they expected.
@@ -36,10 +36,9 @@ of useful tools for SQL tuning, which I describe below.
 
 ### Explain Plan
 
-This generates an execution plan. The user can see the expected cardinality (i.e. expected number of rows returned by each step)
-and the cost (Which should be proportional to the time it will take to run the step). The optimiser may decide to run a statement differently
-than the explain plan would suggest because of features such as bind peeking. Variable data types don't seem to be dealt with very
-well in an explain plan, so it can be better to run the SQL and then look at the results. 
+This generates an estimate of which execution plan the optimiser might use to get the data.
+The user can see the expected cardinality (i.e. expected number of rows returned by each step)
+and the cost (which should be proportional to the time it will take to run the step).
 The explain plan can be used as a guide which parts of the query are likely to run slowly. It contains
 a section containing a list of hints which should force the use of the plan, though data type conversions may mean that is not possible.
 The explain plan can be accessed by using the context menu (right click), or using the icon highlighted below.
@@ -48,7 +47,7 @@ The explain plan can be accessed by using the context menu (right click), or usi
 
 ### Autotrace
 
-Autotrace runs the query. It reads the results from the database, but doesn't display them. This means that the query generates
+Autotrace actually runs the query. It reads the results from the database, but doesn't display them. This means that the query generates
 all the load on the database,
 but none on the local PC.  This solves the problem of a query appearing to run slow because SQL Developer is struggling to display
 all the results.
@@ -76,10 +75,14 @@ screenshot below for an example of the SQL having been run.
 ### DBMS_XPLAN
 
 If the cursor has been run, it is possible to display it using dbms_xplan. This is better if plan statistics have been gathered, which can be done
-by adding a hint to the SQL `/*+ gather_plan_statistics */` This adds a little extra time to the execution, because it is recording statistics,
+by adding a hint to the SQL
+
+```/*+ gather_plan_statistics */```
+
+This adds a little extra time to the execution, because it is recording statistics,
 but it is worth it, because of the extra detail that can be displayed.
 
-Notice the command to generate the report is entered into sql developer from the explain plan context menu. It will need to be run
+Notice the command to generate the report is entered into SQL Developer from the Explain Plan context menu. It will need to be run
 before the output can be viewed. This is particularly useful in working out
 where the optimiser went wrong, because it displays the expected rows and the actual rows. The rule of thumb is that if the actual number of
 rows is an order of magnitude different from expected rows multiplied by executions, the optimiser is likely to make a wrong decision about
@@ -91,7 +94,7 @@ above.
 
 ![DBMS_XPLAN menu entry](../../images/SQLTuning/sqldcursor.png)
 
-Here is an example of the report displaying expected (E-Rows) and actual (A-Rows) rows. In this case, the optimizer was exactly correct!
+Here is an example of the report displaying expected `E-Rows` and actual `A-Rows` rows. In this case, the optimizer was exactly correct!
 
 ![DBMS_XPLAN report](../../images/SQLTuning/sqldxplan.png)
 
@@ -106,14 +109,15 @@ SQL Developer.
 
 ### Real Time SQL Monitor
 
-From the View menu select `DBA`. The DBA section will appear under Connections and Reports to the left of the screen. Click the green
-Plus icon and add an already created connection to the list (or create a new one by pressing the green plus in the windows that appears).
-Expand `SID`->`Tuning`->`Real Time SQL Monitor`. This displays the following
-screen. Currently running and recently completed SQL is displayed. Click on an SQL to display the plan statistics in the bottom half of the
-screen. It might be necessary to enable tuning and diagnostic pack `Tools`->`Prefereces`->`Database`->`Licensing` 
-(so long as there is an appropriate license).
+From the View menu select `DBA`. The _DBA_ section will appear under _Connections_ and _Reports_ to the left of the screen. Click the green
+Plus icon and add an (already created) connection to the list (or create a new one by pressing the green plus in the windows that appears).
 
 ![Add DBA functions to SQL Developer](../../images/SQLTuning/sqldadddba.png)
+
+Expand `SID`->`Tuning`->`Real Time SQL Monitor`. This displays the 
+screen shown below. Currently running and recently completed SQL is displayed. Click on an SQL to display the plan statistics in the bottom half of the
+screen. It might be necessary to enable tuning and diagnostic pack `Tools`->`Prefereces`->`Database`->`Licensing` 
+(so long as there is an appropriate license).
 
 This contains the plan statistics. The timeline shows the parts of the plan that were
 running at different times. The number of bytes read can be an indication as to why a query is slow, e.g. if it has to read 2T of data
@@ -123,14 +127,17 @@ and then returns 3 rows, there might be a more efficient way to gather the requi
 
 ### Instance Viewer
 
-The instance viewer is also available from the DBA section under Database Status. It draws a pretty screen with some graphs of the general
-status of the database. The most interesting part for our purposes is the Top SQL section, which displays the longest running SQL
-in descending time order. Right clicking on an SQL gives a context menu from which it is possible to select Details.
+The _Instance Viewer_ is also available from the _DBA_ section under _Database Status_. It draws a pretty screen with some graphs of the general
+status of the database. The most interesting part for our purposes is the _Top SQL_ section, which displays the longest running SQL
+in descending time order. Right clicking on an SQL gives a context menu from which it is possible to select _Details_.
 
-The SQL Details screen that appears displays the SQL at the top, and a number of reports in the tabs below it. The explain plan
-is pretty much the same as is generated from other options above, and doesn't contain as much information. Bind Variables can be
-useful in reproducing a slow SQL run. SQL Tuining Advice runs an adviser, which can give useful advice on how
-to tune the SQL, e.g. missing indexes or statistics, expensive operations. Sometimes it generates an SQL profile, which is an execution
-plan which the advisor considers is quicker than the one generated by the optimiser. This should not really be accepted by developers, it
+The _SQL Details_ screen that appears displays the SQL at the top, and a number of reports in the tabs below it. The _Explain Plan_
+tab displays pretty much the same plan as is generated from other options above, and doesn't contain as much information. _Bind Variables_ can be
+useful in reproducing a slow SQL run. _SQL Tuning Advice_ runs an adviser, which can give useful advice on how
+to tune the SQL, e.g. missing indexes or statistics, expensive operations. Sometimes it generates an SQL Profile, which is an execution
+plan which the adviser considers is quicker than the one generated by the optimiser. This should not really be accepted by developers, it
 is better to work out why the optimiser is generating a bad plan and change the SQL or the stats so it creates a better one. It can be 
 useful in production when a query is running slowly and a magic bullet is required!
+
+If the magic bullet is used, remember that this will only work in the current database. Unless action is taken this information that made the SQL
+run fast in development won't automatically move with the SQL into test and production environments.

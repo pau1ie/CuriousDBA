@@ -55,7 +55,7 @@ I don't want to step on anyone's toes by changing `ansible.cfg` for everyone.
 
 It turns out that putting `ansible.cfg` into the same path as the playbook means it is 
 read and overrides the default, so no need to mess with anyone elses settings, or
-even to becom root.
+even to become root.
 
 ## Viewing stdout of command/shell/script
 

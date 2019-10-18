@@ -100,7 +100,7 @@ Here is an example of the report displaying expected `E-Rows` and actual `A-Rows
 
 I am not an expert on licensing. It is worth satisfying yourself that you have an appropriate license for the features you intend to use.
 I believe all the tools described above can be used under the Oracle Enterprise Edition license. For those who
-have the Tuning and Diagnostic pack, there are some more useful features, and these can also be acceessed using
+have the Tuning and Diagnostic pack, there are some more useful features, and these can also be accessed using
 SQL Developer.
 
 

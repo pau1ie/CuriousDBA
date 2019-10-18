@@ -6,11 +6,9 @@ tags: ["DBA","Fail","Oracle","Recovery","SQL"]
 
 This is a post which was sitting in my drafts since the start of last year, but it still seems useful to me.
 
-It's been a while since I have had one of these. It all depends on context - what do you want to do with it?
-
-In this case I wanted to remove it, so I offlined all the files in the tablespace and deleted it. It is pretty easy really.
-
-The other thing I could have done is recovered the datafiles from the redo logs, I should try that another time.
+It's been a while since I have had a file that was deleted. What course to take depends on context - what do you want to achieve? 
+In this case I wanted to remove the tablespace. I offlined all the files in the tablespace and deleted it. It is pretty easy really. 
+The other thing I could have done is recovered the datafiles from the redo logs. Maybe I should try that another time.
 
 I wanted to apply the critical patch, so I try to shut down the database prior to altering the oracle home.
 

@@ -1,8 +1,10 @@
 ---
 title: "Missing File"
-date: 2018-01-24T11:09:47Z
-draft: true
+date: 2019-10-18T11:09:47Z
+tags: ["DBA","Fail","Oracle","Recovery","SQL"]
 ---
+
+This is a post which was sitting in my drafts since the start of last year, but it still seems useful to me.
 
 It's been a while since I have had one of these. It all depends on context - what do you want to do with it?
 

@@ -1,1 +1,1 @@
-hugo --theme=jane --buildDrafts server --disableFastRender
+hugo --theme=jane --buildDrafts server --disableFastRender --buildFuture

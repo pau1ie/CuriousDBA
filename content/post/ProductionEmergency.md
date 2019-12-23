@@ -7,7 +7,7 @@ tags: ['Oracle', 'SQL', 'Performance','Tuning','Peoplesoft','DBA']
 Recently our PeopleSoft system locked up. Nobody could do anything, they just got a blank 
 page in the browser. 
 
-# What do we know about the system
+## The System Model
 
 The approach to use in this situation is to consider how the application works.
 In our case a user's web browser will connect to the load balancer, which will connect to a web server.
@@ -16,7 +16,7 @@ will then pass the query to the database. Then the results go back up the chain.
 
 So somewhere in this chain the request is getting stuck. But where?
 
-# Initial investigation
+## Initial Investigation
 
 Armed with this knowledge we could start to investigate where the problem was. Peoplesoft
 allows the admin to check the status of the application servers in the pool. Looking at the
@@ -53,7 +53,7 @@ PSAPPSRV       APPQ             APPSRV         6  51482   2574100 ICPanel
 PSAPPSRV       APPQ             APPSRV         7  52508   2625400 ICPanel
 PSAPPSRV       APPQ             APPSRV         8  53105   2655250 ICPanel
 ...
-````
+```
 
 This doesn't look healthy. All the application servers (PSAPPSRV) are busy running ICPanel. 
 
@@ -83,7 +83,7 @@ SID SERIAL# SECONDS WAIT_CL EVENT         SQL_ID MODULE PROGRAM  CLIENT_ID
 We can see that a number of PSAPPSRV processes are running module THING4, 
 and the same SQL ID starting 67bqun.
 
-## Why
+## What Is Stuck?
 
 Going back to the mental model of the flow of a session from the user, we can
 see it gets as far as the web server, but when the web server asks the
@@ -106,7 +106,7 @@ to buy ourselves time to fix it.
 ## Mitigation
 
 To make the system work, I created a
-script  to kill all the sessions that were running  the problem SQL:
+script to kill all the sessions that were running the problem SQL:
 
 ```sql
 select 'alter system kill session '''||
@@ -135,4 +135,4 @@ The problem is of course that the most important process was the one we had deni
 ## Next Steps
 
 Having contained the problem we were now ready to address the issue with the SQL we had identified.
-I will deal with that in another post.
+I will deal with that in [another post](../moresqltuning).

@@ -12,6 +12,7 @@ they all coexist. I looked at this recently and thought I had better make some n
 before I forget.
 
 There are three types of auditing:
+
 * Traditional auditing. This is the way things worked before 12.1
 * Unified auditing. This is the new rewrite of auditing, but needs some effort to get working.
 * Fine grained auditing. This stays the same between traditional and unified auditing.

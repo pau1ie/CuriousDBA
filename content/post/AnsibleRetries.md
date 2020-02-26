@@ -32,7 +32,7 @@ Here is the output. For intermittent failures like this retry is better than a r
 can't be retried.
 
 ```console
-[psh35@whisk ~]$ ansible-playbook test.yml
+$ ansible-playbook test.yml
 [WARNING]: provided hosts list is empty, only localhost is available.
             Note that the implicit localhost does not match 'all'
 

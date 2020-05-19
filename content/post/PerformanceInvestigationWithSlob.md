@@ -1,7 +1,7 @@
 ---
 title: "Testing IO with SLOB"
-date: 2020-05-19T14:40:50Z
-tags: ['Oracle', 'DBA', 'Performance']
+date: 2020-05-19T14:49:50Z
+tags: ['Oracle', 'DBA', 'Performance', 'Upgrades']
 ---
 
 We recently purchased a new database server. We ran a performance test which our brilliant testing

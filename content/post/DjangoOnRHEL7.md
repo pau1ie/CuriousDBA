@@ -278,7 +278,7 @@ A quick test shows this runs on Apache.
 
 This VM is inside a NATted nework. Nothing on the internet can see us, so we can't get a
 [Let's Encrypt](https://letsencrypt.org/) certificate. To make sure passwords to login to the
-admin site aren't sent encrypted over the network, I will use a self-signed certificate.
+admin site aren't sent in the clear over the network, I will use a self-signed certificate.
 
 There was already a self signed certificate, so just pointing the browser at the website using
 https worked. I had to accept the warnings that the certificate authority was untrusted.

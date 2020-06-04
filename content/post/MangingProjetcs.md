@@ -1,5 +1,5 @@
 ---
-title: "MangingProjetcs"
+title: "Manging Projects"
 date: 2019-04-05T15:54:02+01:00
 tags: ["automation","Project management","Critical Patch","Language","TaskJuggler"]
 ---
@@ -13,9 +13,9 @@ the appropriate change control of course) for maintenance to be done. These are 
 of systems, dev, test, UAT and production like everyone else, and the patches are moved through 
 so any issues are discovered before we hit production.
 
-We like to keep updates seperated, so don't do OS and DB patching at the same time. Also since filesystems
+We like to keep updates separated, so don't do OS and DB patching at the same time. Also since filesystems
 from the database server are NFS mounted on the app and web servers, it is a pain to reboot them all at the
-same time, the proecsses don't start, and the filesystems aren't mounted, so to prevent this I don't patch
+same time, the processes don't start, and the filesystems aren't mounted, so to prevent this I don't patch
 the app and web tier at the same time as the database tier.
 
 So I can see some rules developing. If only there were a program which could take these rules, and spit
@@ -25,11 +25,11 @@ next quarter.
 Well, there is! It is [taskjuggler](http://taskjuggler.org). It takes a little getting used to, it took
 me a week on and off to create my first project, and I am going to walk through it.
 
-This is all in one file. It does allow include files so different parts can be seperated, but my
+This is all in one file. It does allow include files so different parts can be separated, but my
 project isn't that big.
 
 The first thing I have to do is define my project. Most of the options have sensible defaults, but I need
-to make some changes for my project. Task Juggler needs a date range for the project, and a timimg resolution.
+to make some changes for my project. Task Juggler needs a date range for the project, and a timing resolution.
 This gives it the chunks that can be allocated. Note the longer the time and the smaller the resolution the more
 slots there are to be considered, so this can slow down compiling the reports significantly.
 
@@ -46,7 +46,7 @@ project unixpatch "Unix Patching" 2019-04-17 +2m {
 
 I have made some short cuts here. In common with many production support people I don't like to make changes
 on a Friday, so I made it a non-working day. I moved the working hours earlier a little so our Unix
-adminitrator can do patching during the patching window. I also changed the time format to include the time,
+administrator can do patching during the patching window. I also changed the time format to include the time,
 as this project has quite a lot happening over a short timespan.
 
 Next I added a couple of dates to ignore. These are called "leaves", and are times when the project isn't

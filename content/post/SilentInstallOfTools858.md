@@ -1,7 +1,7 @@
 ---
 title: "Silent Installation of Tools 8.58"
 date: 2020-06-04T10:00:00Z
-tags: ['Anbsible', 'Automation', 'PeopleSoft','Upgrades','Windows']
+tags: ['Ansible', 'Automation', 'PeopleSoft','Upgrades','Windows']
 ---
 
 ## Silent install

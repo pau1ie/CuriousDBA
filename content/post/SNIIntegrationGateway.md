@@ -1,7 +1,6 @@
 ---
 title: "SNI and Integration Broker"
-date: 2020-06-10T16:12:10+01:00
-draft: true
+date: 2020-06-10T17:06:10+01:00
 tags: ['PeopleSoft', 'Fail', 'HTTP','Java','Network','Weblogic']
 ---
 

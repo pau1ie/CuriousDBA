@@ -4,7 +4,8 @@ date: 2020-06-12T15:20:49+01:00
 tags: ["Network","PowerShell","Windows","VPN"]
 ---
 
-We use a VPN to access all our work servers. But we use MS teams for meetings,
+We use a Virtual Private Network - a VPN to access all our work servers. 
+But we use MS teams for meetings,
 and our VPN admin asks us not to to push loads of video over the VPN. So what to do?
 Disconnecting from the VPN every time a call came in got old pretty fast. And what
 do you do if you want to show a colleague something which required VPN access?
@@ -65,7 +66,8 @@ goes this way, and everything else goes that way.
 
 ### Showing the routes
 
-To get the computer to show us the routing we can do the following:
+To get the computer to show us the routing we can do the following when connected to
+the VPN.
 
 ```PowerShell
 netsh interface ipv4 show route
@@ -113,7 +115,8 @@ So if I wanted to access this from the VPN I would need to add this IP address t
 route. I need to be connected to the VPN to be able to add the route.
 
 Generally IP addresses come in groups, so it is likely I will want to access
-any IP address starting 128.232.132 via the VPN, so I would do the following:
+any IP address starting 128.232.132 via the VPN, so I would do the following. This needs
+to be done while connected to the VPN:
 
 ```PowerShell
 netsh interface ipv4 add route 128.232.132.0/24 "Work VPN"

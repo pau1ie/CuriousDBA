@@ -19,6 +19,7 @@ say 8 hours with a maximum ttl of 14 hours.
 
 This can be done by changing the configuration in `gpg-agent.conf`. The entries in this
 file is the same as the long form command line options but without the leading double dash.
+On my linux box, I created this file is in `~/.gnupg`.
 
 The options to set are 
 [default-cache-ttl](https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html#index-default_002dcache_002dttl)

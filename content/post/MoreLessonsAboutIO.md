@@ -10,7 +10,7 @@ I expect the question after the last I/O article is: How did we make our server 
 Looking at the AWR report, I could see the main problem was that
 async I/O was slow. We set 
 ```ini
-filesystemio_optoins='SETALL'
+filesystemio_options='SETALL'
 ```
 in the spfile, and this helped a lot. As I understand it, 
 this enables asynchronous I/O, which means

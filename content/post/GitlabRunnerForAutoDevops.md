@@ -1,7 +1,7 @@
 ---
 title: "Gitlab Runner for Auto Devops"
 date: 2021-02-12T12:28:00Z
-tags: ["GitLab","Automation"]
+tags: ["GitLab","Automation","Docker"]
 ---
 
 The Auto DevOps pipeline in GitLab is 

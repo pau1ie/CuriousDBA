@@ -1,7 +1,7 @@
 ---
 title: "Building A Container with AutoDevops in GitLab"
 date: 2021-02-19T13:46:22Z
-tags: ["GitLab","Automation","Docker"]
+tags: ["GitLab","Automation","Docker","Cloud"]
 ---
 
 In the [last post](../gitlabrunnerforautodevops/) I set up a runner. Now lets see if we can use
@@ -21,7 +21,7 @@ in production though - you would create a project in git and use automation to d
 
 In the University we [have our own instance](https://gitlab.developers.cam.ac.uk/explore) of [GitLab](https://gitlab.com/explore/).
 This is actually quite a complex piece of software. In addition to hosting
-git projects, it supports automation of the build and deploy phasess, which
+git projects, it supports automation of the build and deploy phases, which
 is quite useful. This is what I will use to orchestrate the
 build and deploy of an application.
 
@@ -87,6 +87,6 @@ The push refers to repository
  [registry.gitlab.developers.cam.ac.uk/me/myproject/master]
 ```
 
-The next problem is how we deploy this. I will look into that next.
+The next problem is how we deploy this. I will [look into that](../deployingacontainertogooglecloud/) next.
 
 

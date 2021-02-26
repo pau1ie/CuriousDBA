@@ -83,5 +83,5 @@ error during connect: Post http://docker:2375/v1.40/auth:
     dial tcp: lookup docker on 10.0.64.1:53: no such host
 ```
 
-Now the runner is set up. In the next post I will investigate how
+Now the runner is set up. In the [next post](../gitlabbuildingcontainerwithautodevops/) I will investigate how
 we use it to build a container.

@@ -60,7 +60,6 @@ deploy_webapp_development:
     DEPLOY_COMPONENT: webapp
 ```
 
-So really 
 What it does is to take the deploy template from the devops CI templates in
 [the University GitLab](https://gitlab.developers.cam.ac.uk/uis/devops/continuous-delivery/ci-templates/-/tree/master/auto-devops) (This is publicly viewable as I write this) and use them to
 deploy using some environment
@@ -85,7 +84,7 @@ variables set in GitLab for the development environment under
 start with `WEBAPP` and all end with `DEVELOPMENT`. This is important
 as noted in the comments in
 [autodevops/deploy.yml](https://gitlab.developers.cam.ac.uk/uis/devops/continuous-delivery/ci-templates/-/blob/master/auto-devops/deploy.yml)
-which was included in gitlab-ci.yml.
+which was included in `gitlab-ci.yml`.
 
 | Variable | Value |
 |--|--|
@@ -98,4 +97,5 @@ which was included in gitlab-ci.yml.
 Going to the URL now shows Etherpad rather than the unicorn picture!
 
 This seems a little backwards - we have deployed the container into some infrastructure.
-How come the infrastructure was there? I know my colleague created it, but how? That is the subject of the next post.
+How come the infrastructure was there? I know my colleague created it, but how? That is the subject of the 
+[next post](../settingupterraform/).

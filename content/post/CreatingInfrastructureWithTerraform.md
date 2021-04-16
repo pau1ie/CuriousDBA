@@ -1,7 +1,6 @@
 ---
 title: "Creating Infrastructure With Terraform"
-date: 2021-03-19T11:45:06Z
-draft: true
+date: 2021-04-16T11:45:06Z
 tags: ["Docker","Terraform","Cloud","Automation"]
 ---
 

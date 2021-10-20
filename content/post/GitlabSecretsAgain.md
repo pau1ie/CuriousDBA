@@ -1,7 +1,7 @@
 ---
 title: "Gitlab Inventories, Private Keys and Secrets"
 date: 2019-11-18T10:03:50Z
-tags: ['Secrets', 'Ansible', 'GitLab','Automation','Scripting','Security']
+tags: ['Secrets', 'Ansible', 'GitLab','Automation','Scripting','Security','GPG']
 ---
 
 # Secrets and the Problem with Build Servers

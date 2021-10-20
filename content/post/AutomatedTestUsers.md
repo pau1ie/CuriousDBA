@@ -1,7 +1,7 @@
 ---
 title: "Automated Testing Users"
 date: 2018-11-05T16:42:08Z
-tags: ["Automation","Jenkins","Scripting","Security","Testing","Oracle"]
+tags: ["Automation","Jenkins","Scripting","Security","Testing","Oracle","GPG"]
 ---
 
 Imagine a situation where a production database is copied to test, and the data scrambled.

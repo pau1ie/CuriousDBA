@@ -1,7 +1,7 @@
 ---
 title: "Secrets, Ansible and Regpg"
 date: 2019-06-07T10:13:36+01:00
-tags: ["Automation","Ansible","Secrets","VM","GitLab","Security"]
+tags: ["Automation","Ansible","Secrets","VM","GitLab","Security",'GPG']
 ---
 
 I like Ansible, but I find one omission in the way it works is the lack of a way to manage secrets,

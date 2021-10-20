@@ -1,7 +1,7 @@
 ---
 title: "What is  automation?"
 date: 2019-11-15T11:23:50Z
-tags: ['ansible', 'gitlab','automation']
+tags: ['ansible', 'gitlab','automation','GPG']
 ---
 
 # What is automation

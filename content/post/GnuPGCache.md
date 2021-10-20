@@ -1,7 +1,7 @@
 ---
 title: "Gnu PG Cache Time To Live"
 date: 2020-02-27T10:03:50Z
-tags: ['Automation', 'Ansible','Fail','Scripting','Language']
+tags: ['Automation', 'Ansible','Fail','Scripting','Language','Secrets','GPG']
 ---
 
 As [discussed previously](../../tags/secrets), we use [regpg](https://dotat.at/prog/regpg/)

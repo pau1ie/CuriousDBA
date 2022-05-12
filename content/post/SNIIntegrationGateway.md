@@ -1,7 +1,7 @@
 ---
 title: "SNI and Integration Broker"
 date: 2020-06-10T17:06:10+01:00
-tags: ['PeopleSoft', 'Fail', 'HTTP','Java','Network','Weblogic']
+tags: ['PeopleSoft', 'Fail', 'HTTP','Java','Network','Weblogic','TLS']
 ---
 
 A colleague had created a new service operation in peoplesoft integration

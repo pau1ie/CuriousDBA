@@ -133,7 +133,7 @@ remote system. Examples include:
 Of course the above problems can also occur if the server isn't accessible
 e.g. because of a firewall rule.
 
-### In the trust store
+### In the Trust Store
 
 This is configured in `integrationGateway.properties` as follows:
 

@@ -131,7 +131,7 @@ On the CA host run the following:
 
 ```bash
 regpg decrypt ca/root.key.asc > ca/root.key
-openssl x509 -req -days 730 -in <hostname>.csr \
+openssl x509 -req -days 365 -in <hostname>.csr \
   -CA ca/root.crt -CAkey ca/root.key           \
   -out <hostname>.crt
 rm ca/root.key
@@ -139,7 +139,10 @@ rm ca/root.key
 
 Hostname is the fully qualified hostname of the 
 WebLogic server. Once again I need to supply 
-the password for the CA root key.
+the password for the CA root key. 365 is how many
+days the certificate is valid for before it needs
+to be replaced. Since I rebuild domains every time I
+install the quarterly patches, a year is plenty for me.
 
 We now have the signed certificate in `<hostname>.crt`
 This needs to be transferred back to the web server. 
@@ -157,6 +160,9 @@ keytool -importcert -keystore <keystorefile> \
   -file <hostname>.crt -alias <hostname>     \
   -storepass <password>
 ```
+
+
+### Setting up the Trust Store
 
 The root public certificate needs to be imported to the 
 trust store. For the trust store it is probably worth starting

@@ -1,7 +1,7 @@
 ---
 title: "Encrypting PeopleSoft Internal Communication - Elastic Search and Kibana"
-date: 2022-05-26T10:20:07+01:00
-tags: ["TLS","Network","PeopleSoft","Security","Elastic Search","Kibana"]
+date: 2022-06-24T08:24:07+01:00
+tags: ["TLS","Network","PeopleSoft","Security","Elastic Search","Kibana","openssl"]
 ---
 
 Now we have the core PeopleSoft stack communicating encrypting traffic, we 

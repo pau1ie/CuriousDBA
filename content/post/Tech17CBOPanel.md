@@ -5,7 +5,8 @@ tags: ["Tech17","UKOUG","Oracle","Performance","Optimizer"]
 image: images/Engine.jpg
 ---
 
-On Wednesday 5th December, I attended [Tech 17](http://www.tech17.ukoug.org/).
+On Wednesday 5th December, I attended 
+[Tech 17](https://web.archive.org/web/20190223101743/http://tech17.ukoug.org/).
 While it is a pain to organise getting there and back, I found in previous
 years that it was useful for me to go and find out what is happening in the
 industry.

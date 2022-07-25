@@ -4,7 +4,7 @@ date: 2020-02-27T10:03:50Z
 tags: ['Automation', 'Ansible','Fail','Scripting','Language','Secrets','GPG']
 ---
 
-As [discussed previously](../../tags/secrets), we use [regpg](https://dotat.at/prog/regpg/)
+As [discussed previously](../../tags/secrets/), we use [regpg](https://dotat.at/prog/regpg/)
 to manage Ansible secrets. This has been really
 useful. One annoyance though is that some tasks can take up to 6 hours to run, but
 the gpg agent only caches the gpg passphrase for 10 minutes or so. I end up having to

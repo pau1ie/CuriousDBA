@@ -1,3 +1,5 @@
 public
 *.swp
 resources
+tmp/
+themes/jane_old

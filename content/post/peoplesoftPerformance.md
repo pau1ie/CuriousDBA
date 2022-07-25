@@ -15,7 +15,7 @@ This is a really useful tool because it gives real performance indications as to
 The user can see the time taken at the browser, web server, application server and the database server for a simple query. When a slow response time is seen 
 it is important to drill down to see what cause it. It could just be Windows downloading updates for example. PeopleSoft ping data is stored in the database
 used by the application in the table sysadm.ps_ptp_tst_cases. I used the following columns
-(See [Dave Kurtz' website](http://www.go-faster.co.uk/peopletools/ptp_tst_cases.htm) for the rest).
+(See [Dave Kurtz' website](https://www2.go-faster.co.uk/peopletools/ptp_tst_cases.htm) for the rest).
 
 Column           | Notes
 -----------------|-----------------------------------------------------------------------------

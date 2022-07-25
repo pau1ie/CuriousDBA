@@ -53,4 +53,4 @@ select sql_id, count(*),
  order by count(*) desc;
 {{< /highlight >}}
 
-I notice [Arup Nanda did an Oracle Magazine article on this in January 2013](http://www.oracle.com/technetwork/issue-archive/2013/13-jan/o13dba-1871177.html).
+I notice [Arup Nanda did an Oracle Magazine article on this in January 2013](https://asktom.oracle.com/Misc/oramag/beginning-performance-tuning-active-session-history.html).

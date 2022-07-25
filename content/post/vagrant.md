@@ -20,7 +20,7 @@ use the witness VM as the ansible controller.
 ## The Solution ##
 
 The solution to getting three VMs fired up in a repeatable manner, and all talking to each other is
-[Vagrant](www.vagrantup.com).
+[Vagrant](https://www.vagrantup.com/).
 
 Downloading and installing it was pretty straightforward. Configuring it was less so. Here is what I did:
 

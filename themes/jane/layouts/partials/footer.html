@@ -1,5 +1,5 @@
 <div class="icon-links">
-  {{ partial "social_links.html" . }} 
+  {{ partial "social_links.html" . }}
 </div>
 
 <div class="copyright">
@@ -42,7 +42,7 @@
 
   {{ if .Site.Params.customFooter }}
     <span>
-      {{ .Site.Params.customFooter }}
+      {{ .Site.Params.customFooter | safeHTML }}
     </span>
   {{ end }}
 </div>

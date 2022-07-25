@@ -8,7 +8,7 @@ tags: ["Oracle","DBA","Backup","Recovery"]
 Different Scenarios
 ---
 
-In my [previous post](../crashconsistentrecovery) on this topic, I noted that you could use the snapshot time
+In my [previous post](../crashconsistentrecovery/) on this topic, I noted that you could use the snapshot time
 on the recover database command to recover the database from a SAN snapshot.
 
 I realise that there are different possible scenarios and my write up wasn't clear

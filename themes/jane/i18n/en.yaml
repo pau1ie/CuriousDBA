@@ -58,9 +58,7 @@
   translation: "{{.Count}} words"
 
 - id: readingTime
-  translation:
-    one: "{{.Count}} minute read"
-    other: "{{.Count}} minutes read"
+  translation: "{{.Count}} min read"
 
 # copyright
 - id: author

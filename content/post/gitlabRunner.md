@@ -20,7 +20,8 @@ So it ends up that we have to:
 * Lastly do the work on the target date.
 
 The problem is that this is a lot of manual boring repetitive work that is prone to error. In short, it is the type
-of thing that a computer can do really easily and well. I have been playing with [GitLab](../../tags/gitlab) - Maybe it can help here as well?
+of thing that a computer can do really easily and well. I have been playing with [GitLab](../../tags/gitlab/)
+ - Maybe it can help here as well?
 
 
 ## The Script
@@ -47,8 +48,8 @@ list of dates.
 ### Installing GitLab Runner
 
 I wanted to send the emails once a day, which means finding a way to run a script. I have a VM which is running
-[Jenkins](../../tags/jenkins) already, so I asked the sysadmin to install gitlab runner on that. Then I had to
-[register](https://docs.gitlab.com/runnders/register) gitlab runner with my project. 
+[Jenkins](../../tags/jenkins/) already, so I asked the sysadmin to install gitlab runner on that. Then I had to
+[register](https://docs.gitlab.com/runner/register) gitlab runner with my project. 
 
 
 ### Registering GitLab Runner

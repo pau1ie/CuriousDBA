@@ -68,7 +68,7 @@ the apxs utility in a different place to where it actually lives. This is easily
 ~~~~
 
 Building the srpm creates an RPM I can install. I use the
-[ansible command module](http://docs.ansible.com/ansible/command_module.html) to do this:
+[ansible command module](http://docs.ansible.com/ansible/2.9/modules/command_module.html) to do this:
 
 ~~~~
   - name: Build the mod webauth
@@ -78,7 +78,7 @@ Building the srpm creates an RPM I can install. I use the
     become: true
 ~~~~
 
-And now I am ready to install it using [Ansible's yum module](http://docs.ansible.com/ansible/yum_module.html).
+And now I am ready to install it using [Ansible's yum module](http://docs.ansible.com/ansible/2.9/modules/yum_module.html).
 
 ~~~~
   - name: Install the webauth rpm
@@ -93,8 +93,8 @@ And now I am ready to install it using [Ansible's yum module](http://docs.ansibl
 Now I need to configure Raven to work. As per section 3 of the
 [install document](http://raven.cam.ac.uk/project/apache/INSTALL)
 I need to download the Raven public keys and store them in the Apache configuration. I can use Ansible's
-[get_url module](http://docs.ansible.com/ansible/get_url_module.html) to do this, once I have created the 
-directory using the [file module](http://docs.ansible.com/ansible/file_module.html):
+[get_url module](http://docs.ansible.com/ansible/2.9/modules/get_url_module.html) to do this, once I have created the 
+directory using the [file module](http://docs.ansible.com/ansible/2.9/modules/file_module.html):
 
 ~~~~
   - name: Create directory for raven keys
@@ -124,7 +124,7 @@ Jenkins as a reverse proxy. This was taken from a colleague (Thanks
 However what I do understand is that when a user accesses the website, they get sent to Raven for authentication.
 If they authenticate correctly, it checks whether the user is in the [UIS](http://www.uis.cam.ac.uk/) (InstID=UIS)
 and whether they are in the list (Just me - psh35 in the example below). If these checks pass, the request is forwarded
-on to the [locally installed Jenkins](../jenkinsoncentos), with the username in the X-Forwarded-User header.
+on to the [locally installed Jenkins](../jenkinsoncentos/), with the username in the X-Forwarded-User header.
 
 Another important thing to remember is that mod_ucam_webauth requires a random cookie key, as per section 4 of the
 [install guide]( http://raven.cam.ac.uk/project/apache/INSTALL). uuidgen promises to create a globally unique identifier.
@@ -170,7 +170,7 @@ Then I install the configuration with the following task:
 ~~~~
 
 I have a handler to restart Apache, which is what the notify does. The configuration being deployed with the
-ansible [template module](http://docs.ansible.com/ansible/template_module.html) is: 
+ansible [template module](http://docs.ansible.com/ansible/2.9/modules/template_module.html) is: 
 
 ~~~~
 LoadModule ucam_webauth_module /usr/lib64/httpd/modules/mod_ucam_webauth.so
@@ -222,7 +222,7 @@ for two reasons.
 To allow this to happen I found I needed to configure SE Linux to allow this. Ansible can do this so long as the 
 python SElinux management modules are  installed, which is why they were installed at the top. I suspect I wasn't the
 first person to have this problem - the example in the
-[seboolean ansible module documentation](http://docs.ansible.com/ansible/seboolean_module.html) is exactly
+[seboolean ansible module documentation](http://docs.ansible.com/ansible/2.9/modules/seboolean_module.html) is exactly
 what I want to do!
 
 ~~~~

@@ -110,7 +110,7 @@ due to maintenance.
 
 Windows has its own role. Since we only have process schedulers
 on Windows, there is only one task for that. [Read about my adventures
-trying to get that to work!](../../tags/windows)
+trying to get that to work!](../../tags/windows/)
 
 ## Playbooks ##
 

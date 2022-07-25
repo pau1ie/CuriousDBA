@@ -11,7 +11,7 @@ As [noted before](../gettingwindowsandansibletoplaynicely/), rather than trying 
 I simply copied it on to the local disc of the VM.
 
 Before running Ansible on windows, the operating system has to be configured using (for example) the 
-[ConfigureRemotingForAnsible.ps1](https://github.com/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1)
+[ConfigureRemotingForAnsible.ps1](https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1)
 script. I took the defaults.  I didn't bother setting up any of the advanced options like CredSSP, as in practice there didn't seem to be
 any benefit.
 
@@ -207,6 +207,6 @@ do want to try running from a share, you have to change Internet Explorer securi
 
 There is more in my playbook, but this is the difficult part. The rest is just doing
 the same I would in unix, but replacing modules where necessary with the
-[windows equivalents](https://docs.ansible.com/ansible/latest/modules/list_of_windows_modules.html). 
+[windows equivalents](https://docs.ansible.com/ansible/2.9/modules/list_of_windows_modules.html). 
 
 

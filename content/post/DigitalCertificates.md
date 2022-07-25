@@ -176,7 +176,7 @@ won't be trusted, so the integration broker will refuse to connect.
 
 Integration broker needs to be instructed to remember who it is talking to if the
 remote site used SNI, which most do. See my 
-[article on SNI](../sniintegrationgateway) for more information
+[article on SNI](../sniintegrationgateway/) for more information
 about this.
 
 ## Conclusion

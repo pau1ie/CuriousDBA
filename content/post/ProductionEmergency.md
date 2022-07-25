@@ -20,7 +20,7 @@ So somewhere in this chain the request is getting stuck. But where?
 
 Armed with this knowledge we could start to investigate where the problem was. Peoplesoft
 allows the admin to check the status of the application servers in the pool. Looking at the
-application server statis, we could see something like the following:
+application server status, we could see something like the following:
 
 ```
 -----------------------------
@@ -135,4 +135,4 @@ The problem is of course that the most important process was the one we had deni
 ## Next Steps
 
 Having contained the problem we were now ready to address the issue with the SQL we had identified.
-I will deal with that in [another post](../moresqltuning).
+I will deal with that in [another post](../moresqltuning/).

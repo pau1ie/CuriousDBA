@@ -10,7 +10,8 @@ and our SSO can also use, but I will leave that till another time.
 
 I am creating a test application running in django on my desktop. Django by default only listens on the loopback
 interface which means it can provide friendly information to developers safe in the knowledge that anyone who can
-view it is logged on to my desktop. Sites are identified using their URL, so I need to add a unique hostname. I edited /etc/hosts and added myhost.local as a hostname to the end of the line that starts 127.0.0.1. Now
+view it is logged on to my desktop. Sites are identified using their URL, so I need to add a unique hostname.
+I edited /etc/hosts and added myhost.local as a hostname to the end of the line that starts 127.0.0.1. Now
 I can visit http://myhost.local:8000 in my web browser and get to my test website.
 
 ## Getting Started
@@ -94,7 +95,7 @@ openssl x509 -text -in sp.crt
 
 Which gives the same information as was input when the certificate was being created.
 
-### Configuring Django
+### Configuring Python3-SAML
 
 The python3-saml library provides a settings.json file which needs to be filled in. As I say I am using
 the University SSO rather than OneLogin, so I need to change all the information in there. SAML has it's
@@ -191,9 +192,9 @@ namepsaces as per the highlighted lines below:
 I added this to our SSO server, and clicked save. Now when I click login on the demo site, I get a list of
 attributes back. Great!
 
-## Incorporating SSO into my application
+## What about Django?
 
-This is all well and good, but I have a Django website which I want to incorporate into SSO. I think this is for the next
-post. 
+This is all well and good, but I have a Django website which I want to incorporate into SSO. I think this is for the 
+[next post](../moredjangosaml/). 
 
 

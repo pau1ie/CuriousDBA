@@ -65,6 +65,16 @@ As noted above, the domain name can be different to the domain ID,
 so we keep a consistent name to ensure that the paths are
 the same on each VM.
 
+{{% notice note %}}
+Updated to add:
+
+The *PeopleTools 8.60: System and Server Administration* manual notes
+(Chapter 6 section *Domain Settings* that the domain ID
+*must not exceed 8 characters*, hence I truncate the environment name
+at 7 characters before adding the number. What it doesn't mention is that
+the domain id must not start with a number. That tripped me up!
+{{% /notice %}}
+
 ### Process Scheduler
 
 We only have two process scheduler VMs, one on Unix and one on Windows,

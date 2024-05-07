@@ -6,10 +6,10 @@ tags: [ "Automation","GitHub","Netlify","Blog"]
 
 # Moving
 
-My hosting at the University of Cambridge: people.ds.cam.ac.uk/psh35 is being discontinued. I am therefore moving [this blog](https://curiousdba.netlify.com/) to Netlify:
+My hosting at the University of Cambridge: people.ds.cam.ac.uk/psh35 is being discontinued. I am therefore moving [this blog](https://curiousdba.netlify.app/) to Netlify:
 
 
-Please update your bookmarks or feed reader to: https://curiousdba.netlify.com/
+Please update your bookmarks or feed reader to: https://curiousdba.netlify.app/
 
 # Netlify
 This wasn't as hard as it might have been. I took the opportunity to upgrade the theme, because GitHub complained about the security of

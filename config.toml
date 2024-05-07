@@ -1,5 +1,5 @@
 #baseURL = "http://localhost:1313/"
-baseURL = "https://curiousdba.netlify.com/"
+baseURL = "https://curiousdba.netlify.app/"
 title = "Curious DBA"
 enableRobotsTXT = true
 enableEmoji = true

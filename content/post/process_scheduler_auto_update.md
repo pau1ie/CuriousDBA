@@ -69,7 +69,7 @@ the same on each VM.
 Updated to add:
 
 The *PeopleTools 8.60: System and Server Administration* manual notes
-(Chapter 6 section *Domain Settings* that the domain ID
+(Chapter 6 section *Domain Settings*) that the domain ID
 *must not exceed 8 characters*, hence I truncate the environment name
 at 7 characters before adding the number. What it doesn't mention is that
 the domain id must not start with a number. That tripped me up!

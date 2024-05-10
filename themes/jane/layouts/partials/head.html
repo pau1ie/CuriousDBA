@@ -23,8 +23,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 
 <!-- author & description & keywords  -->
-{{- if or .Params.author .Site.Author.name -}}
-{{- $author_id := .Params.author | default .Site.Author.name -}}
+{{- if or .Site.Params.author.name .Site.Author.name -}}
+{{- $author_id := .Site.Params.author.name | default .Site.Author.name -}}
 {{- $author := (index ($.Site.Data.authors | default dict) $author_id) -}}
 {{- $author_lang := (index ($author | default dict) .Site.Language.Lang) -}}
 {{- $author_name := $author_lang.name.display | default $author.name.display | default $author_id -}}
@@ -78,9 +78,21 @@
 <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}" media="screen" crossorigin="anonymous">
 <!-- End -->
 
+<!-- Custom wallpaper (optional) -->
+{{- if .Site.Params.wallpaper }}
+<style>
+  .wallpaper {
+    background-image: url('{{ .Site.Params.wallpaper }}');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+</style>
+{{- end }}
+
 <!-- custom css -->
 {{ range .Site.Params.customCSS }}
-<link rel="stylesheet" href="{{ "/css/" | relURL }}{{ . }}">
+<link rel="stylesheet" href="{{ "css/" | relURL }}{{ . }}">
 {{ end }}
 
 {{/* NOTE: These Hugo Internal Templates can be found starting at https://github.com/spf13/hugo/blob/master/tpl/tplimpl/template_embedded.go#L158 */}}
@@ -100,7 +112,7 @@
 
 <!-- Analytics -->
 {{- if and (not .Site.IsServer) .Site.GoogleAnalytics -}}
-  {{ template "_internal/google_analytics_async.html" . }}
+  {{ template "_internal/google_analytics.html" . }}
 {{- end -}}
 
 <!-- Custom head -->

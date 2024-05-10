@@ -1,30 +1,24 @@
 <!-- js -->
 {{ if .Site.Params.bootcdn -}}
-  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdn.bootcss.com/slideout/1.0.1/slideout.min.js" crossorigin="anonymous"></script>
 {{- else if .Site.Params.publicCDN.enable -}}
   {{ .Site.Params.publicCDN.jquery | safeHTML }}
   {{ .Site.Params.publicCDN.slideout | safeHTML }}
 {{- else -}}
-  <script type="text/javascript" src="{{ "lib/jquery/jquery-3.2.1.min.js" | relURL }}"></script>
+  <script type="text/javascript" src="{{ "lib/jquery/jquery-3.7.1.min.js" | relURL }}"></script>
   <script type="text/javascript" src="{{ "lib/slideout/slideout-1.0.1.min.js" | relURL }}"></script>
 {{- end }}
 
 <!-- Jane theme main js -->
-{{ $jsTemplate := resources.Get "js/main.js" }}
-{{ $secureJS := $jsTemplate | resources.ExecuteAsTemplate "js/main.js" . | fingerprint }}
+{{ $jsMain := resources.Get "js/main.js" | js.Build }}
+{{ $secureJS := $jsMain | resources.ExecuteAsTemplate "js/main.js" . | fingerprint }}
 <script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous"></script>
 <!-- End -->
 
 <!-- Mathjax -->
 {{- if and (or .Params.mathjax (and .Site.Params.mathjax (ne .Params.mathjax false))) (or .IsPage .IsHome) }}
-  <script type="text/javascript">
-    window.MathJax = {
-      showProcessingMessages: false,
-      messageStyle: 'none'
-    };
-  </script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+  {{ partialCached "mathjax.html" . }}
 {{- end }}
 <!-- End -->
 
@@ -63,7 +57,7 @@
   (function() {
     if (window.location.hostname === 'localhost') return;
     var hm = document.createElement("script"); hm.async = true;
-	hm.src = "//tajs.qq.com/stats?sId={{.}}";
+    hm.src = "//tajs.qq.com/stats?sId={{.}}";
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
   })();
@@ -105,19 +99,18 @@
 <!-- Load PhotoSwipe js if the load-photoswipe shortcode has been used -->
 {{ if or .Site.Params.photoswipe .Site.Params.fancybox }}
   {{ if .Site.Params.bootcdn }}
-    <script src="{{ "/js/load-photoswipe.js" | relURL }}"></script>
+    <script src="{{ "js/load-photoswipe.js" | relURL }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc="
       crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk="
       crossorigin="anonymous"></script>
   {{ else if .Site.Params.publicCDN.enable }}
-    <script type="text/javascript" src="{{ "/js/load-photoswipe.js" | relURL }}"></script>
-	{{ .Site.Params.publicCDN.photoswipe | safeHTML }}
+    <script type="text/javascript" src="{{ "js/load-photoswipe.js" | relURL }}"></script>
+    {{ .Site.Params.publicCDN.photoswipe | safeHTML }}
     {{ .Site.Params.publicCDN.photoswipeUI | safeHTML }}
   {{ else }}
-    <script type="text/javascript" src="{{ "/js/load-photoswipe.js" | relURL }}"></script>
-    <script type="text/javascript" src="{{ "/lib/photoswipe/photoswipe.min.js" | relURL}}"></script>
-    <script type="text/javascript" src="{{ "/lib/photoswipe/photoswipe-ui-default.min.js" | relURL}}"></script>
+    <script type="text/javascript" src="{{ "lib/photoswipe/photoswipe.min.js" | relURL}}"></script>
+    <script type="text/javascript" src="{{ "lib/photoswipe/photoswipe-ui-default.min.js" | relURL}}"></script>
   {{ end }}
 {{ end }}
 
@@ -248,10 +241,11 @@
     host: '{{ .Site.Params.remark42Url }}',
     site_id: '{{ .Site.Params.remark42SiteId | default "remark" }}',
     components: [
-{{- if .Page.IsPage }}
-	    'embed',
-{{- else if and .Site.Params.commentCount.remark42.enable .IsHome }}
-	    'counter',
+{{- if not .IsHome }}
+    'embed',
+{{- end }}
+{{- if .Site.Params.commentCount.remark42.enable }}
+    'counter',
 {{- end }}
     ],
   }
@@ -280,5 +274,5 @@
 
 <!-- custom js -->
 {{ range .Site.Params.customJS }}
-  <script src="{{ "/js/" | relURL }}{{ . }}"></script>
+  <script src="{{ "js/" | relURL }}{{ . }}"></script>
 {{ end }}

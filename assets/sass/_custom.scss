@@ -1,0 +1,211 @@
+/**------------------------------------------------------------------------
+ *                           CUSTOM STYLES
+ *                 You can add your custom styles here.
+ *------------------------------------------------------------------------**/
+
+/**------------------------------------------------------------------------
+ *                        Chinese Font Example
+ *------------------------------------------------------------------------**/
+// body:lang(zh) {
+//   line-height: 1.618;
+//   letter-spacing: 0.0618em;
+//   font-family: -apple-system, BlinkMacSystemFont, SF UI Text, Helvetica Neue, PingFang SC,
+//     Hiragino Sans GB, Noto Sans CJK SC, Microsoft YaHei, Arial, sans-serif;
+// }
+
+body {
+    --pico-block-spacing-horizontal: 5rem;
+    --pico-border-width: 0.15rem;
+}
+
+div.home-container {
+    max-width: 45rem;
+}
+
+a.post-link {
+    text-decoration: none;
+    position: relative;
+}
+
+a.post-link:after {
+    content: '';
+    display: flex;
+    border-bottom: 2px solid;
+    transform: scaleX(0);
+    transition: 0.4s ease-in-out;
+}
+
+a.post-link:hover:after {
+    transform: scaleX(.9);
+}
+
+a.read-more-link.outline:hover {
+    background-color: var(--pico-primary-focus);
+}
+
+div.content {
+    padding: 3em 5em;
+    margin-top: 0;
+}
+
+h1.post-title {
+    padding-bottom: 1rem;
+}
+
+tr {
+    border: 0.5em #fff;
+}
+
+.pico pre code {
+    font-size: 0.8rem;
+    font-family: inherit;
+}
+
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+    body {
+        background-color: #f0f5f0;
+        --pico-primary-background: #5ba65b;
+        --pico-primary-focus: #e4f0e4;
+        --pico-table-border-color: #fff;
+        --pico-code-background-color: #e4f0e4 ;
+    }
+
+    #content {
+        background-color: var(--pico-background-color);
+    }
+
+    td {
+        background-color: var(--pico-primary-focus);
+    }
+
+    .pico th {
+        color: #fff;
+        background-color: var(--pico-primary-background);
+    }
+    .pico td {
+        background-color: var(--pico-primary-focus);
+    }
+
+    /* Code highlighting - light green background for light mode */
+    div.highlight > div {
+        background-color: var(--pico-primary-focus) !important;
+    }
+    div.highlight > div > table > tbody > tr > td > pre {
+        background-color: var(--pico-primary-focus) !important;
+    }
+    #content > article > div.post-content > pre > code {
+        border: 2px solid #ddd;
+    }
+
+    /* Header on index */
+    .jane-card > header {
+        background-color: var(--pico-primary-focus);
+    }
+    /* Shortcode */
+    .shortcode-notice.note .notice-content {
+        background: #E6F9E6;
+    }
+}
+
+
+/* Dark color scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        body {
+            background-color: var(--pico-muted-border-color);
+            --pico-primary-background: #5ba65b;
+            --pico-table-border-color: #5ba65b;
+        }
+    
+        #content {
+            background-color: var(--pico-background-color);
+        }
+        .pico th {
+            color: #fff;
+            background-color: var(--pico-primary-background);
+        }
+        .content .post .post-copyright, .highlight {
+            border-color: #5ba65b;
+        }
+        .content .post .post-header {
+            border-bottom: 3px #5ba65b solid;
+        }
+        div.highlight > div > table > tbody > tr > td > pre > code > span > a {
+            color: var(--pico-color) !important;
+        }
+        .pico pre>code {
+            background-color: #002b36;
+        }
+        #content > article > div.post-content > pre > code {
+            border: 2px solid #5ba65b;
+        }
+        /* Shortcode */
+        .shortcode-notice.note .notice-content {
+            background: #2f332f;
+        }
+    }
+}
+  
+  /* Dark color scheme (Forced) */
+  /* Enabled if forced with data-theme="dark" */
+  [data-theme="dark"] {
+    body {
+        background-color: var(--pico-muted-border-color);
+        --pico-primary-background: #5ba65b;
+        --pico-table-border-color: #5ba65b;
+    }
+
+    #content {
+        background-color: var(--pico-background-color);
+    }
+    .pico th {
+        color: #fff;
+        background-color: var(--pico-primary-background);
+    }
+    .content .post .post-copyright, .highlight {
+        border-color: #5ba65b;
+    }
+    .content .post .post-header {
+        border-bottom: 3px #5ba65b solid;
+    }
+    div.highlight > div > table > tbody > tr > td > pre > code > span > a {
+        color: var(--pico-color) !important;
+    }
+    .pico pre>code {
+        background-color: #002b36;
+    }
+    #content > article > div.post-content > pre > code {
+        border: 2px solid #5ba65b;
+    }
+    /* Shortcode */
+    .shortcode-notice.note .notice-content {
+        background: #2f332f;
+    }
+  }
+
+  /* Pasted in for the notice shortcode */
+// ==============================
+// Shortcode Notice
+// ==============================
+
+.shortcode-notice .notice-content {
+    padding: 0.6em 1em;
+    display: block;
+    font-size: 1em;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+  
+.shortcode-notice-title {
+    color: #fff;
+    padding-left: 1em;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+  
+// note color
+.shortcode-notice-title.note {
+    background-color: rgba(92, 184, 92, 0.8);
+}

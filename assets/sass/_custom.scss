@@ -69,6 +69,7 @@ tr {
         --pico-primary-focus: #e4f0e4;
         --pico-table-border-color: #fff;
         --pico-code-background-color: #e4f0e4 ;
+        --cd-header-color: #f5faf5;
     }
 
     #content {
@@ -100,7 +101,7 @@ tr {
 
     /* Header on index */
     .jane-card > header {
-        background-color: var(--pico-primary-focus);
+        background-color: var(--cd-header-color);
     }
     /* Shortcode */
     .shortcode-notice.note .notice-content {

@@ -211,6 +211,14 @@ hosting the application. What could be using it? The application is the only
 thing running on the VM (apart from some monitoring software and the operating 
 system). What was using all the swap?
 
+{{% notice info %}}
+This is wrong. Swap is being used because I didn't switch on swap
+accounting and unified cgroup hierarchy. See where I deal with a similar
+issue on the web server in [Garbage Collection Waits](../garbagecollectionwaits/).
+{{% /notice %}}
+
+
+
 Running `top`, pressing `f` to change the fields displayed and including
 `SWAP` in the list by arrowing down and selecting it with space, then pressing 
 escape shows that it is our application using swap. Taking note of a Process 

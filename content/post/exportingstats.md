@@ -2,7 +2,7 @@
 title: "Exporting Statistics"
 date: 2017-12-20T11:28:20Z
 image: images/counters.JPG
-tags: ["Oracle","DBA","Statistics","Performance",Export"]
+tags: ["Oracle","DBA","Statistics","Performance","Export"]
 ---
 
 This was surprisingly more difficult than I expected. We know that we can export stats
@@ -25,7 +25,9 @@ SQL> exec DBMS_STATS.CREATE_STAT_TABLE('SCHEMA','MYSTATS','USERS');
 PL/SQL procedure successfully completed.
 
 SQL> @export_stats
-BEGIN DBMS_STATS.EXPORT_TABLE_STATS ( 'SCHEMA', 'MYTABLE', NULL, stattab => 'MYSTATS'); END;
+BEGIN
+DBMS_STATS.EXPORT_TABLE_STATS ( 'SCHEMA', 'MYTABLE', NULL, stattab => 'MYSTATS');
+END;
 
 *
 ERROR at line 1:
@@ -45,7 +47,9 @@ SQL> exec dbms_stats.upgrade_stat_table( 'SCHEMA','MYSTATS')
 PL/SQL procedure successfully completed.
 
 SQL> @export_stats
-BEGIN DBMS_STATS.EXPORT_TABLE_STATS ( 'SCHEMA', 'MYTABLE', NULL, stattab => 'MYSTATS'); END;
+BEGIN
+DBMS_STATS.EXPORT_TABLE_STATS ( 'SCHEMA', 'MYTABLE', NULL, stattab => 'MYSTATS');
+END;
 
 *
 ERROR at line 1:
@@ -74,7 +78,7 @@ SQL> exec DBMS_STATS.CREATE_STAT_TABLE('SCHEMA','MYSTATS','USERS');
 
 PL/SQL procedure successfully completed.
 
-SQL> exec DBMS_STATS.EXPORT_TABLE_STATS ( 'SCHEMA', 'MYTABLE', NULL, stattab => 'MYSTATS')
+SQL> exec DBMS_STATS.EXPORT_TABLE_STATS('SCHEMA','MYTABLE',NULL,stattab => 'MYSTATS')
 
 PL/SQL procedure successfully completed.
 {{< /highlight >}}
@@ -98,8 +102,10 @@ Export: Release 12.1.0.2.0 - Production on Tue Dec 19 09:19:53 2017
 Copyright (c) 1982, 2014, Oracle and/or its affiliates.  All rights reserved.
 Password: 
 
-Connected to: Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
-Starting "SCHEMA"."SYS_EXPORT_TABLE_01":  SCHEMA/******** directory=EXP_DIR tables=MYSTATS dumpfile=MYSTATS 
+Connected to: Oracle Database 12c Enterprise Edition Release 12.1.0.2.0
+  - 64bit Production
+Starting "SCHEMA"."SYS_EXPORT_TABLE_01":  SCHEMA/********
+  directory=EXP_DIR tables=MYSTATS dumpfile=MYSTATS 
 Estimate in progress using BLOCKS method...
 Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
 Total estimation using BLOCKS method: 128 KB
@@ -113,5 +119,6 @@ Master table "SCHEMA"."SYS_EXPORT_TABLE_01" successfully loaded/unloaded
 ******************************************************************************
 Dump file set for SCHEMA.SYS_EXPORT_TABLE_01 is:
   /path/to/dir/MYSTATS.dmp
-Job "SCHEMA"."SYS_EXPORT_TABLE_01" successfully completed at Tue Dec 19 09:27:04 2017 elapsed 0 00:06:58
+Job "SCHEMA"."SYS_EXPORT_TABLE_01" successfully completed at
+   Tue Dec 19 09:27:04 2017 elapsed 0 00:06:58
 {{< /highlight >}}

@@ -3,7 +3,7 @@ baseURL = "https://curiousdba.netlify.app/"
 title = "Curious DBA"
 enableRobotsTXT = true
 enableEmoji = true
-theme = ["https://github.com/xianmin/hugo-theme-jane"]
+theme = ["jane"]
 
 hasCJKLanguage = false     # has chinese/japanese/korean ? # 自动检测是否包含 中文\日文\韩文
 

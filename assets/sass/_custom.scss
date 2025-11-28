@@ -104,10 +104,10 @@ tr {
         background-color: var(--cd-header-color);
     }
     /* Shortcode */
-    .shortcode-notice.note .notice-content {
+    .notice--note .notice__content {
         background: #E6F9E6;
     }
-    .shortcode-notice.warning .notice-content {
+    .notice--warning .notice__content {
         background: #f9f0e6;
     }
 }
@@ -146,11 +146,12 @@ tr {
             border: 2px solid #5ba65b;
         }
         /* Shortcode */
-        .shortcode-notice.note .notice-content {
+        .notice--note .notice__content {
             background: #2f332f;
         }
-        .shortcode-notice.warning .notice-content {
+        .notice--warning .notice__content {
             background: #33312f;
+            color: var(--pico-color);
         }
     }
 }
@@ -187,11 +188,12 @@ tr {
         border: 2px solid #5ba65b;
     }
     /* Shortcode */
-    .shortcode-notice.note .notice-content {
+    .notice--note .notice__content {
         background: #2f332f;
     }
-    .shortcode-notice.warning .notice-content {
-        background: #33312f;
+    .notice--warning .notice__content {
+        background: #333100;
+        color: var(--pico-color);
     }
   }
 
@@ -200,26 +202,26 @@ tr {
 // Shortcode Notice
 // ==============================
 
-.shortcode-notice .notice-content {
-    padding: 0.6em 1em;
-    display: block;
-    font-size: 1em;
-    margin-top: 0;
-    margin-bottom: 0;
-}
+// .shortcode-notice .notice-content {
+//     padding: 0.6em 1em;
+//     display: block;
+//     font-size: 1em;
+//     margin-top: 0;
+//     margin-bottom: 0;
+// }
 
-.shortcode-notice-title {
-    color: #fff;
-    padding-left: 1em;
-    font-weight: bold;
-    text-transform: capitalize;
-}
+// .shortcode-notice-title {
+//     color: #fff;
+//     padding-left: 1em;
+//     font-weight: bold;
+//     text-transform: capitalize;
+// }
   
 // note color
-.shortcode-notice-title.note {
+.notice--note .notice__title {
     background-color: rgba(92, 184, 92, 0.8);
 }
 
-.shortcode-notice-title.warning {
+.notice--warning .notice__title {
     background-color: rgba(204, 105, 47, 0.8);
 }

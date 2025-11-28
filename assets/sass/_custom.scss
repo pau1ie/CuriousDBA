@@ -107,6 +107,9 @@ tr {
     .shortcode-notice.note .notice-content {
         background: #E6F9E6;
     }
+    .shortcode-notice.warning .notice-content {
+        background: #f9f0e6;
+    }
 }
 
 
@@ -146,6 +149,9 @@ tr {
         .shortcode-notice.note .notice-content {
             background: #2f332f;
         }
+        .shortcode-notice.warning .notice-content {
+            background: #33312f;
+        }
     }
 }
   
@@ -184,6 +190,9 @@ tr {
     .shortcode-notice.note .notice-content {
         background: #2f332f;
     }
+    .shortcode-notice.warning .notice-content {
+        background: #33312f;
+    }
   }
 
   /* Pasted in for the notice shortcode */
@@ -198,7 +207,7 @@ tr {
     margin-top: 0;
     margin-bottom: 0;
 }
-  
+
 .shortcode-notice-title {
     color: #fff;
     padding-left: 1em;
@@ -209,4 +218,8 @@ tr {
 // note color
 .shortcode-notice-title.note {
     background-color: rgba(92, 184, 92, 0.8);
+}
+
+.shortcode-notice-title.warning {
+    background-color: rgba(204, 105, 47, 0.8);
 }

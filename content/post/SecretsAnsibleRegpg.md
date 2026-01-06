@@ -195,8 +195,8 @@ and created a file for the username and another for the password:
 
 ```console
 $ mkdir secrets
-$ echo -n "Username" > | regpg encrypt secrets/unixhomedeploytokenuser.asc
-$ echo -n "MyPassword" > | regpg encrypt secrets/unixhomedeploytokenuser.asc
+$ echo -n "Username" | regpg encrypt secrets/unixhomedeploytokenuser.asc
+$ echo -n "MyPassword" | regpg encrypt secrets/unixhomedeploytokenuser.asc
 $ git commit -m "Set up regpg"
 [Development 5c42e2d] Set up regpg
  11 files changed, 324 insertions(+), 2 deletions(-)

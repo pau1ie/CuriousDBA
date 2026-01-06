@@ -290,6 +290,10 @@ Oracle hence the path names (Though I have shortened them a little).
 
 
 ```ini
+[Unit]
+Description=Our Oracle Databases
+Requires=network.target local-fs.target 
+
 [Service]
 Type=forking
 User=oracle
@@ -299,6 +303,9 @@ ExecStart=/oracle/23ai/dbhomeFree/bin/sqlplus /nolog @/etc/systemd/start.sql
 ExecStop=/oracle/23ai/dbhomeFree/bin/sqlplus /nolog @/etc/systemd/stop.sql
 RestartSec=30
 Restart=always
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 This has the advantage that we can check on the status of the
@@ -319,8 +326,6 @@ processes (Output is edited to reduce the width).
            ├─12353 db_psp0_FREE
 ...
 ```
-
-
 But we also need the listener to be started. At first I thought I could create a socket file
 but it seems that the listener doesn't support that. It would need to
 have been coded to enable systemd to pass the open socket to the
@@ -329,3 +334,42 @@ database, I just changed the database scripts to start and stop
 the listener.
 
 So in the end I abandoned this idea, and stuck with my original plan.
+
+
+## It didn't work! Systemd killed my processes!
+
+So with great excitement, we rebooted the server, and all the databases
+were killed less than a second after the shutdown script was invoked.
+The processes were read into the loop, but by the time it came to
+trying to extract information, they were dead. The alert logs noted
+that the processes were being killed.
+
+### Don't kill my processes
+
+It seems systemd is working as designed, killing user processes.
+We need to instruct it not to do so, by editing
+`/etc/systemd/logind.conf`
+and adding:
+```
+KillExcludeUsers=oracle
+```
+
+### What does linger do?
+
+
+But wait!
+
+We can create services dynamically
+
+systemd-run --uid=oracle --unit=FREE --service-type=forking  /opt/oracle/product/23ai/dbhomeFree/bin/dbstart
+
+We can move processes into cgroups by writing their pids to a file:
+
+/sys/fs/cgroup/systemd{name}/cgroup.procs
+
+The cgroup name for a process is in: 
+
+/proc/<pid>/cgroup
+1:name=systemd:/system.slice/FREE.service
+
+So we need another script to run in a cgroup which then adds the database processes to that cgroup. This is done by 
